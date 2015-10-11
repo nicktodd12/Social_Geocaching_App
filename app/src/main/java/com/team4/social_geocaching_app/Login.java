@@ -4,16 +4,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-//Test Commit 2
-//Test Commit 3 from Michael Matonis
-//Gradling
-//Johnny Comment 5:08 PM
-public class Login extends AppCompatActivity {
+import android.view.View;
+import android.view.View.OnClickListener;
+
+public class Login extends AppCompatActivity implements OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        View btnLogin = findViewById(R.id.log_button);
+        btnLogin.setOnClickListener(this);
     }
 
     @Override
@@ -36,5 +38,13 @@ public class Login extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.log_button:
+                System.out.print("HELLO TEST");
+                break;
+        }
     }
 }
