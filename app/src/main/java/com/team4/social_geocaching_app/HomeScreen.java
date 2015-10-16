@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 public class HomeScreen extends AppCompatActivity {
     //TODO: create HomeScreen functionality, Gradle
-    //BIG NERD RANCH!
+    //BIG NERD RANCH DRESSING!
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
