@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class HomeScreen extends AppCompatActivity {
+    //TODO: create HomeScreen functionality
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
