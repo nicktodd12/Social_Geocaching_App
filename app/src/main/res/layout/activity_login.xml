@@ -26,19 +26,18 @@
     android:id="@+id/username_edit"
     android:layout_gravity="center_horizontal"
     android:layout_weight="0.14"
-    android:text="username"
     android:paddingRight="10dp"
     android:background="@color/white"
     android:phoneNumber="false"
     android:password="false"
     android:height="50dp"
-    android:paddingLeft="10dp"/>
+    android:paddingLeft="10dp"
+    android:hint="username" />
 
 <EditText
     android:layout_width="340dp"
     android:layout_height="wrap_content"
     android:id="@+id/password_edit"
-    android:text="password"
     android:background="@color/white"
     android:phoneNumber="false"
     android:password="false"
@@ -48,7 +47,8 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:layout_marginTop="10dp"
-    android:layout_weight=".14"/>
+    android:layout_weight=".14"
+    android:hint="password" />
 
 
 

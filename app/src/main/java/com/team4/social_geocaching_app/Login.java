@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.content.Intent;
 
 public class Login extends AppCompatActivity implements OnClickListener {
 
@@ -16,6 +17,8 @@ public class Login extends AppCompatActivity implements OnClickListener {
 
         View btnLogin = findViewById(R.id.log_button);
         btnLogin.setOnClickListener(this);
+        View btnCreate = findViewById(R.id.create_account_button);
+        btnCreate.setOnClickListener(this);
     }
 
     @Override
@@ -43,7 +46,10 @@ public class Login extends AppCompatActivity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.log_button:
-                System.out.print("HELLO TEST");
+
+                break;
+            case R.id.create_account_button:
+                startActivity(new Intent(this, New_User.class));
                 break;
         }
     }
