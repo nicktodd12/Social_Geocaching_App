@@ -2,22 +2,28 @@ package com.team4.social_geocaching_app;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.content.Intent;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class Login extends AppCompatActivity implements OnClickListener {
+
+    Button btnLogin;
+    Button btnCreate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        View btnLogin = findViewById(R.id.log_button);
+        btnLogin = (Button)findViewById(R.id.log_button);
         btnLogin.setOnClickListener(this);
-        View btnCreate = findViewById(R.id.create_account_button);
+        btnCreate = (Button)findViewById(R.id.create_account_button);
         btnCreate.setOnClickListener(this);
     }
 
@@ -46,11 +52,21 @@ public class Login extends AppCompatActivity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.log_button:
-
+                if (validLogin()) {
+                    startActivity(new Intent(this, HomeScreen.class));
+                }
                 break;
             case R.id.create_account_button:
                 startActivity(new Intent(this, New_User.class));
                 break;
         }
+    }
+
+    public boolean validLogin(){
+        EditText userNameBox = (EditText)findViewById(R.id.username_edit);
+        EditText passwordBox = (EditText)findViewById(R.id.password_edit);
+        String currentUserName = userNameBox.getText().toString();
+        String currentPassword = passwordBox.getText().toString();
+        return(currentUserName.equals("admin") && currentPassword.equals("password"));
     }
 }

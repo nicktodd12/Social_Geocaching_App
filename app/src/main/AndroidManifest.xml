@@ -20,6 +20,10 @@
             android:name=".New_User"
             android:label="@string/title_activity_new__user" >
         </activity>
+        <activity
+            android:name=".HomeScreen"
+            android:label="@string/title_activity_home_screen" >
+        </activity>
     </application>
 
 </manifest>
