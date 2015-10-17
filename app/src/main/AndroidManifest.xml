@@ -5,25 +5,70 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:label="@string/app_title"
+        android:theme="@style/GreenActionBarTheme" >
         <activity
+            android:theme="@style/NoBar"
             android:name=".Login"
-            android:label="@string/app_name" >
+            android:label="@string/app_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:theme="@style/GreenActionBarTheme"
+            android:name=".HomeScreen"
+            android:label="@string/app_title">
+        </activity>
+
         <activity
             android:name=".New_User"
-            android:label="@string/title_activity_new__user" >
+            android:theme="@style/NoBar"
+            android:label="@string/app_title" >
         </activity>
         <activity
-            android:name=".HomeScreen"
-            android:label="@string/title_activity_home_screen" >
+            android:name=".AboutGeocache"
+            android:theme="@style/GreenActionBarTheme"
+            android:label="@string/title_about_geocache" >
         </activity>
+        <activity
+            android:name=".Connect"
+            android:theme="@style/GreenActionBarTheme"
+            android:label="@string/title_connect" >
+        </activity>
+        <activity
+            android:name=".CreateGeocache"
+            android:theme="@style/GreenActionBarTheme"
+            android:label="@string/title_create_geocache" >
+        </activity>
+        <activity
+            android:name=".FoundGeocache"
+            android:theme="@style/GreenActionBarTheme"
+            android:label="@string/title_found_geocache" >
+        </activity>
+        <activity
+            android:name=".Leaderboards"
+            android:theme="@style/GreenActionBarTheme"
+            android:label="@string/title_leaderboards" >
+        </activity>
+        <activity
+            android:name=".Map"
+            android:theme="@style/GreenActionBarTheme"
+            android:label="@string/title_map" >
+        </activity>
+        <activity
+            android:name=".MyAccount"
+            android:theme="@style/GreenActionBarTheme"
+            android:label="@string/title_my_account" >
+        </activity>
+        <activity
+            android:name=".NearMe"
+            android:theme="@style/GreenActionBarTheme"
+            android:label="@string/title_near_me" >
+        </activity>
+
     </application>
 
 </manifest>

@@ -1,8 +1,19 @@
 <resources>
     <string name="app_name">Social_Geocaching_App</string>
+    <string name="app_title">Social Geocache</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="title_about_geocache">About Geocache</string>
+    <string name="title_create_geocache">About Geocache</string>
+    <string name="title_found_geocache">Found Geocache</string>
+    <string name="title_leaderboards">Leaderboards</string>
+    <string name="title_map">Maps</string>
+    <string name="title_my_account">My Account</string>
+    <string name="title_near_me">Near Me</string>
+    <string name="title_connect">Connect</string>
+
     <string name="title_activity_new__user">New_User</string>
     <string name="title_activity_home_screen">HomeScreen</string>
 </resources>

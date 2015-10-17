@@ -1,8 +1,67 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+    <style name="NoBar" parent="Theme.AppCompat.Light.NoActionBar"/>
+
+
+
+
+    <!--&lt;!&ndash; the theme applied to the application or activity &ndash;&gt;-->
+    <!--<style name="GreenBar" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--<item name="android:background">@color/greenTheme</item>-->
+
+    <!--</style>-->
+
+    <style name="listButtonStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:height">75dp</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+
+    </style>
+
+
+
+    <style name="GreenActionBarTheme"
+           parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/GreenActionBar</item>
+        <item name="android:actionBarTabTextStyle">@style/GreenActionBarTabText</item>
+        <item name="android:actionMenuTextColor">@color/dark</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/GreenActionBar</item>
+        <item name="actionBarTabTextStyle">@style/GreenActionBarTabText</item>
+        <item name="actionMenuTextColor">@color/dark</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="GreenActionBar"
+           parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse" >
+        <item name="android:background">@color/greenTheme</item>
+        <item name="android:titleTextStyle">@style/GreenActionBarTitleText</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@color/greenTheme</item>
+        <item name="titleTextStyle">@style/GreenActionBarTitleText</item>
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="GreenActionBarTitleText"
+           parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">30px</item>
+    </style>
+
+    <!-- ActionBar tabs text -->
+    <style name="GreenActionBarTabText"
+           parent="@style/Widget.AppCompat.ActionBar.TabText">
+        <item name="android:textColor">@color/orange</item>
     </style>
 
 </resources>
