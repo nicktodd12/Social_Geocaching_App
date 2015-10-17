@@ -1,16 +1,24 @@
 package com.team4.social_geocaching_app;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.view.View.OnClickListener;
+import android.widget.Toast;
 
-public class New_User extends AppCompatActivity {
+public class New_User extends AppCompatActivity implements OnClickListener {
+    private Button btnNewUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new__user);
+        btnNewUser = (Button)findViewById(R.id.submit);
+        btnNewUser.setOnClickListener(this);
     }
 
     @Override
@@ -33,5 +41,14 @@ public class New_User extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.submit:
+                Toast.makeText(getApplicationContext(), "Use 'admin' and 'password' to log in!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, Login.class));
+                break;
+        }
     }
 }

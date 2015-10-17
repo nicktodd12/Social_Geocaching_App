@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class Login extends AppCompatActivity implements OnClickListener {
 
@@ -99,6 +100,11 @@ public class Login extends AppCompatActivity implements OnClickListener {
         EditText passwordBox = (EditText)findViewById(R.id.password_edit);
         String currentUserName = userNameBox.getText().toString();
         String currentPassword = passwordBox.getText().toString();
-        return(currentUserName.equals("admin") && currentPassword.equals("password"));
+        if(currentUserName.equals("admin") && currentPassword.equals("password")){
+            return true;
+        }else{
+            Toast.makeText(getApplicationContext(), "Incorrect login info!", Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 }
