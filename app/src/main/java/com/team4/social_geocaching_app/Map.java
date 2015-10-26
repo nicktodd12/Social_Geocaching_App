@@ -9,7 +9,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class Map extends FragmentActivity implements OnMapReadyCallback{
+public class Map extends FragmentActivity{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
@@ -64,15 +64,22 @@ public class Map extends FragmentActivity implements OnMapReadyCallback{
 //        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
         LatLng sydney = new LatLng(-34, 151);
+        LatLng bolz = new LatLng(40.002966, -83.015217);
+        LatLng union = new LatLng(39.997934, -83.008211);
+        LatLng michaelHouse = new LatLng(39.995363, -83.002591);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.addMarker(new MarkerOptions().position(bolz).title("Bolz Hall"));
+        mMap.addMarker(new MarkerOptions().position(union).title("Ohio State Union"));
+        mMap.addMarker(new MarkerOptions().position(michaelHouse).title("Michael's House"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(bolz));
     }
 
-    @Override
-    public void onMapReady(GoogleMap map) {
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
+//    @Override
+//    public void onMapReady(GoogleMap map) {
+//        // Add a marker in Sydney, Australia, and move the camera.
+//        LatLng sydney = new LatLng(-34, 151);
+//        LatLng columbus = new LatLng(40.002966, -83.015217);
+//        map.addMarker(new MarkerOptions().position(columbus).title("Marker in Sydney"));
+//        map.moveCamera(CameraUpdateFactory.newLatLng(columbus));
+//    }
 }
