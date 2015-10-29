@@ -17,6 +17,7 @@ public class Login extends AppCompatActivity implements OnClickListener {
     Button btnLogin;
     Button btnCreate;
     private static final String TAG = "LoginActivity";
+    private DatabaseHelper dbHelp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +101,16 @@ public class Login extends AppCompatActivity implements OnClickListener {
         EditText passwordBox = (EditText)findViewById(R.id.password_edit);
         String currentUserName = userNameBox.getText().toString();
         String currentPassword = passwordBox.getText().toString();
-        if(currentUserName.equals("admin") && currentPassword.equals("password")){
+        if(loginSuccess(currentUserName, currentPassword)){
             return true;
         }else{
-            Toast.makeText(getApplicationContext(), "Incorrect login info!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Loser!", Toast.LENGTH_LONG).show();
             return false;
         }
+    }
+
+    private boolean loginSuccess(String currentUserName, String currentPassword){
+        dbHelp = new DatabaseHelper(this);
+        return(dbHelp.selectAll(currentUserName, currentPassword).size() > 0);
     }
 }

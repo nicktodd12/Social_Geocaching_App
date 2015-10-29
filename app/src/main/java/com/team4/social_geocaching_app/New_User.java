@@ -8,10 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class New_User extends AppCompatActivity implements OnClickListener {
     private Button btnNewUser;
+    private DatabaseHelper dbHelp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +48,33 @@ public class New_User extends AppCompatActivity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.submit:
-                Toast.makeText(getApplicationContext(), "Use 'admin' and 'password' to log in!", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(this, Login.class));
+                boolean success = this.CreateAccount();
+                if(success){
+                    startActivity(new Intent(this, Login.class));
+                    Toast.makeText(getApplicationContext(), "Username and password are good!", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Loser!", Toast.LENGTH_LONG).show();
+
+                }
                 break;
         }
     }
+
+    private boolean CreateAccount() {
+        EditText userNameBox = (EditText)findViewById(R.id.username);
+        EditText passwordBox = (EditText)findViewById(R.id.password);
+        String username = userNameBox.getText().toString();
+        String password = passwordBox.getText().toString();
+
+        if ((!username.equals(""))
+                && (!password.equals(""))) {
+            this.dbHelp = new DatabaseHelper(this);
+            this.dbHelp.insert(username, password);
+            return true;
+        }
+        return false;
+    }
+
+
+
 }
