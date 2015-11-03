@@ -19,8 +19,8 @@ public class DatabaseHelper {
     private Context context;
     private SQLiteDatabase db;
     private SQLiteStatement currentStmt;
-    private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(name, password) values (?, ?)";
-    private static final String NEW_GEOCACHE_QUERY = "insert into " + GEOCACHE_TABLE + "(cacheNum, creator, points, latitude, longitude) values (?, ?, ?, ?, ?)";
+    private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(username, password) values (?, ?)";
+    private static final String NEW_GEOCACHE_QUERY = "insert into " + GEOCACHE_TABLE + "(cacheNum, username, points, latitude, longitude) values (?, ?, ?, ?, ?)";
     private static final String NEW_ACTION_QUERY = "insert into " + ACTION_TABLE + "(username, action, cacheNum) values (?, ?, ?)";
 
     public DatabaseHelper(Context context) {
@@ -29,10 +29,28 @@ public class DatabaseHelper {
         this.db = openHelper.getWritableDatabase();
     }
 
-    public long insertAccount(String name, String password) {
+    public long insertAccount(String username, String password) {
         this.currentStmt = this.db.compileStatement(NEW_USER_QUERY);
-        this.currentStmt.bindString(1, name);
+        this.currentStmt.bindString(1, username);
         this.currentStmt.bindString(2, password);
+        return this.currentStmt.executeInsert();
+    }
+
+    public long insertGeocache(int cacheNum, String username, int points, double latitude, double longitude) {
+        this.currentStmt = this.db.compileStatement(NEW_GEOCACHE_QUERY);
+        this.currentStmt.bindLong(1, cacheNum);
+        this.currentStmt.bindString(2, username);
+        this.currentStmt.bindLong(3, points);
+        this.currentStmt.bindDouble(4, latitude);
+        this.currentStmt.bindDouble(5, longitude);
+        return this.currentStmt.executeInsert();
+    }
+
+    public long insertAction(String username, String action, int cacheNum) {
+        this.currentStmt = this.db.compileStatement(NEW_ACTION_QUERY);
+        this.currentStmt.bindString(1, username);
+        this.currentStmt.bindString(2, action);
+        this.currentStmt.bindLong(3, cacheNum);
         return this.currentStmt.executeInsert();
     }
 
@@ -40,10 +58,26 @@ public class DatabaseHelper {
         Username = username;
         Password = password;
         List<String> list = new ArrayList<>();
-        Cursor cursor = this.db.query(ACCOUNT_TABLE, new String[] { "name", "password" }, "name = '"+ username +"' AND password= '"+ password+"'", null, null, null, "name desc");
+        Cursor cursor = this.db.query(ACCOUNT_TABLE, new String[] { "username", "password" }, "username = '"+ username +"' " +
+                "AND password= '"+ password+"'", null, null, null, "username desc");
         if (cursor.moveToFirst()) {
             do {
                 list.add(cursor.getString(0));
+                list.add(cursor.getString(1));
+            } while (cursor.moveToNext());
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+    }
+
+    public List<String> selectGeocaches(int cacheNum) {
+        List<String> list = new ArrayList<>();
+        Cursor cursor = this.db.query(GEOCACHE_TABLE, new String[] { "cacheNum", "username", "points", "latitude", "longitude" }, "cacheNum = '"+ cacheNum +"'"
+                , null, null, null, "cacheNum desc");
+        if (cursor.moveToFirst()) {
+            do {
                 list.add(cursor.getString(1));
             } while (cursor.moveToNext());
         }
@@ -60,8 +94,8 @@ public class DatabaseHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(id INTEGER PRIMARY KEY, name TEXT, password TEXT)");
-            db.execSQL("CREATE TABLE " + GEOCACHE_TABLE + "(cacheNum INTEGER PRIMARY KEY, creator TEXT, points INTEGER, latitude REAL, longitude REAL)");
+            db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(id INTEGER PRIMARY KEY, username TEXT, password TEXT)");
+            db.execSQL("CREATE TABLE " + GEOCACHE_TABLE + "(cacheNum INTEGER PRIMARY KEY, username TEXT, points INTEGER, latitude REAL, longitude REAL)");
             db.execSQL("CREATE TABLE " + ACTION_TABLE + "(username TEXT, action TEXT, cacheNum INTEGER, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
                     "PRIMARY KEY(username, action, cacheNUM))");
         }
