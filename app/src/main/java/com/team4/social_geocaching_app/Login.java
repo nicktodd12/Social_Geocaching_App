@@ -1,5 +1,6 @@
 package com.team4.social_geocaching_app;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -102,6 +103,8 @@ public class Login extends AppCompatActivity implements OnClickListener {
         String currentUserName = userNameBox.getText().toString();
         String currentPassword = passwordBox.getText().toString();
         if(loginSuccess(currentUserName, currentPassword)){
+            SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences",0);
+            pref.edit().putString("userName", currentUserName).apply();
             return true;
         }else{
             Toast.makeText(getApplicationContext(), "Loser!", Toast.LENGTH_LONG).show();
