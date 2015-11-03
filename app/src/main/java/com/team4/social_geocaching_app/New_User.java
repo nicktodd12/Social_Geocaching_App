@@ -69,7 +69,7 @@ public class New_User extends AppCompatActivity implements OnClickListener {
         if ((!username.equals(""))
                 && (!password.equals(""))) {
             this.dbHelp = new DatabaseHelper(this);
-            this.dbHelp.insert(username, password);
+            this.dbHelp.insertAccount(username, password);
             return true;
         }
         return false;
