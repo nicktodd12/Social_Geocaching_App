@@ -2,11 +2,85 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:weightSum="1">
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="148dp"
+        android:id="@+id/innerRelativeLayout"
+        android:layout_weight="0.30">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/imageView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/defaultface"
+            android:layout_marginLeft="40dp"
+            android:layout_alignParentBottom="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Geocache Name"
+            android:id="@+id/GeocacheTitle"
+            android:layout_above="@+id/imageView"
+            android:layout_alignLeft="@+id/imageView"
+            android:layout_alignStart="@+id/imageView"
+            android:layout_alignParentTop="true"
+            android:textSize="40dp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Times Found"
+            android:id="@+id/timesFoundTitle"
+            android:textSize="25dp"
+            android:gravity="center"
+            android:paddingTop="30dp"
+            android:layout_alignTop="@+id/imageView"
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0"
+            android:id="@+id/timesFound"
+            android:layout_below="@+id/timesFoundTitle"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:paddingTop="0dp"
+            android:textStyle="bold"
+            android:textSize="60dp"/>
+    </RelativeLayout>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:text="About a Geocache"/>
+        android:layout_width="335dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Description"
+        android:id="@+id/textDescriptionTitle"
+        android:paddingTop="20dp"
+        android:textSize="30dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="332dp"
+        android:layout_height="wrap_content"
+        android:text="Generic Text Description"
+        android:id="@+id/textDescription"
+        android:paddingTop="10dp"
+        android:layout_gravity="center_horizontal"/>
 </LinearLayout>

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class AboutGeocache extends AppCompatActivity {
 
@@ -11,6 +13,14 @@ public class AboutGeocache extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_geocache);
+        
+        Bundle b = getIntent().getExtras();
+        TextView GeocacheTitle = (TextView) findViewById(R.id.GeocacheTitle);
+        TextView TimesFound = (TextView) findViewById(R.id.timesFound);
+        TextView Description = (TextView) findViewById(R.id.textDescription);
+        Description.setText((String) b.get("Description"));
+        GeocacheTitle.setText((String) b.get("Title"));
+        TimesFound.setText( b.get("TimesFound").toString());
     }
 
     @Override

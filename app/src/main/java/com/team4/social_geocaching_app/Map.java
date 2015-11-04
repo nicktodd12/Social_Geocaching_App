@@ -1,4 +1,5 @@
 package com.team4.social_geocaching_app;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -7,9 +8,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class Map extends FragmentActivity{
+public class Map extends FragmentActivity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
@@ -17,6 +19,8 @@ public class Map extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        // Set up Listeners
+
         setUpMapIfNeeded();
     }
 
@@ -61,7 +65,10 @@ public class Map extends FragmentActivity{
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+
+        // Create all Markers with their information
+        // These will be dynamically loaded from the database along with relevant info
+        // including descriptions, Images, Times Found, Creator, etc...
 
         LatLng sydney = new LatLng(-34, 151);
         LatLng bolz = new LatLng(40.002966, -83.015217);
@@ -70,9 +77,52 @@ public class Map extends FragmentActivity{
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.addMarker(new MarkerOptions().position(bolz).title("Bolz Hall"));
         mMap.addMarker(new MarkerOptions().position(union).title("Ohio State Union"));
-        mMap.addMarker(new MarkerOptions().position(michaelHouse).title("Michael's House"));
+        mMap.addMarker(new MarkerOptions().position(michaelHouse).title("Michael's House").snippet(michaelHouse.toString()));
+
+        // Position the camera
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(bolz));
+
+        mMap.setOnMapClickListener((GoogleMap.OnMapClickListener) this);
+        mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
+        mMap.setOnMapLongClickListener((GoogleMap.OnMapLongClickListener) this);
+        mMap.setOnInfoWindowClickListener((GoogleMap.OnInfoWindowClickListener) this);
+
+
     }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        marker.showInfoWindow();
+        return true;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent aboutCacheIntent = new Intent(this, AboutGeocache.class);
+        Bundle b = new Bundle();
+        switch (marker.getTitle()){
+            case "Michael's House":
+                b.putString("Title", marker.getTitle());
+                b.putInt("TimesFound", 7);
+                b.putString("Description", "This Geocache is located at Michael's House");
+                b.putDouble("Latitude", marker.getPosition().latitude);
+                b.putDouble("Longitude", marker.getPosition().longitude);
+                aboutCacheIntent.putExtras(b);
+                startActivity(aboutCacheIntent);
+        }
+    }
+
 
 //    @Override
 //    public void onMapReady(GoogleMap map) {
