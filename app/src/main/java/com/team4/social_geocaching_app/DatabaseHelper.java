@@ -55,8 +55,6 @@ public class DatabaseHelper {
     }
 
     public List<String> selectAll(String username, String password) {
-        Username = username;
-        Password = password;
         List<String> list = new ArrayList<>();
         Cursor cursor = this.db.query(ACCOUNT_TABLE, new String[] { "username", "password" }, "username = '"+ username +"' " +
                 "AND password= '"+ password+"'", null, null, null, "username desc");
@@ -70,6 +68,21 @@ public class DatabaseHelper {
             cursor.close();
         }
         return list;
+    }
+
+    public boolean usernameTaken(String username) {
+        List<String> list = new ArrayList<>();
+        Cursor cursor = this.db.query(ACCOUNT_TABLE, new String[] {"username"}, "username = '"+ username +"'", null, null, null, "username desc");
+        //Cursor cursor = db.rawQuery("SELECT * FROM Accounts WHERE username = ?", new String[] {username});
+        if (cursor.moveToFirst()) {
+            do {
+                list.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        return list.size() != 0;
     }
 
     public List<String> selectGeocaches(int cacheNum) {
@@ -94,8 +107,8 @@ public class DatabaseHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(id INTEGER PRIMARY KEY, username TEXT, password TEXT)");
-            db.execSQL("CREATE TABLE " + GEOCACHE_TABLE + "(cacheNum INTEGER PRIMARY KEY, username TEXT, points INTEGER, latitude REAL, longitude REAL)");
+            db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(username TEXT PRIMARY KEY, password TEXT)");
+            db.execSQL("CREATE TABLE " + GEOCACHE_TABLE + "(cacheNum INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, points INTEGER, latitude REAL, longitude REAL, cacheName TEXT)");
             db.execSQL("CREATE TABLE " + ACTION_TABLE + "(username TEXT, action TEXT, cacheNum INTEGER, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
                     "PRIMARY KEY(username, action, cacheNUM))");
         }
@@ -105,6 +118,8 @@ public class DatabaseHelper {
 
             Log.w("Example", "Upgrading database; this will drop and recreate the tables.");
             db.execSQL("DROP TABLE IF EXISTS " + ACCOUNT_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + GEOCACHE_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + ACTION_TABLE);
             onCreate(db);
         }
     }

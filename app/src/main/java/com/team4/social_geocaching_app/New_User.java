@@ -52,9 +52,6 @@ public class New_User extends AppCompatActivity implements OnClickListener {
                 if(success){
                     startActivity(new Intent(this, Login.class));
                     Toast.makeText(getApplicationContext(), "Username and password are good!", Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(getApplicationContext(), "Loser!", Toast.LENGTH_LONG).show();
-
                 }
                 break;
         }
@@ -65,12 +62,18 @@ public class New_User extends AppCompatActivity implements OnClickListener {
         EditText passwordBox = (EditText)findViewById(R.id.password);
         String username = userNameBox.getText().toString();
         String password = passwordBox.getText().toString();
+        this.dbHelp = new DatabaseHelper(this);
 
         if ((!username.equals(""))
-                && (!password.equals(""))) {
-            this.dbHelp = new DatabaseHelper(this);
+                && (!password.equals(""))&&password.length() > 5 && !this.dbHelp.usernameTaken(username)) {
             this.dbHelp.insertAccount(username, password);
             return true;
+        }
+        else if(this.dbHelp.usernameTaken(username)){
+            Toast.makeText(getApplicationContext(), "Username taken!", Toast.LENGTH_LONG).show();
+        }
+        else if(password.length() < 6){
+            Toast.makeText(getApplicationContext(), "Make a longer password!", Toast.LENGTH_LONG).show();
         }
         return false;
     }
