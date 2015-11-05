@@ -38,10 +38,16 @@ public class MyAccount extends AppCompatActivity {
 
         this.dbHelp = new DatabaseHelper(this);
         String username = getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken");
-        dbHelp.insertAction(username, "created", 5);
         List<Action> results = dbHelp.selectActionsByUser(username);
+        int point = 0, found = 0;
         for (Action a : results) {
+            if(a.getAction().equals("found")){
+                point += a.getPoints();
+                found += 1;
+            }
         }
+        points.setText(Integer.toString(point));
+        geocachesFound.setText(Integer.toString(found));
         //TextView action1 = (TextView)findViewById(R.id.action1);
         //TextView date1 = (TextView)findViewById(R.id.action1);
 

@@ -126,9 +126,9 @@ public class DatabaseHelper {
 
     public List<Action> selectActionsByUser(String username) {
         List<Action> list = new ArrayList<>();
-        String query = "SELECT * FROM Actions";
+        String query = "SELECT * FROM Actions LEFT OUTER JOIN Geocaches ON Actions.cacheNum=Geocaches.cacheNum";
         if(!username.equals("")){
-            query += " WHERE username='"+username+"'";
+            query += " WHERE Actions.username='"+username+"'";
         }
         query+=" ORDER BY Timestamp DESC";
         Cursor cursor = db.rawQuery(query, null);
@@ -139,6 +139,7 @@ public class DatabaseHelper {
                 a.setAction(cursor.getString(1));
                 a.setCacheNum(Integer.parseInt(cursor.getString(2)));
                 a.setDate(cursor.getString(3));
+                a.setPoints(Integer.parseInt(cursor.getString(6)));
                 list.add(a);
             } while (cursor.moveToNext());
         }
