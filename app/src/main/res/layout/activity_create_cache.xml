@@ -2,11 +2,131 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+    android:id="@+id/createCache"
+    android:weightSum="1">
 
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:text="Create a Geocache"/>
+        android:layout_height="55dp"
+        android:text="Create a Geocache"
+        android:id="@+id/createAGeocache"
+        android:textSize="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/geocacheImage"
+            android:minWidth="125dp"
+            android:minHeight="125dp"
+            android:paddingLeft="20dp"
+            android:padding="20dp"
+            android:layout_marginLeft="20dp"
+            android:clickable="true" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.67">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="GeoCache Title"
+                android:id="@+id/GeocacheTitle"
+                android:layout_gravity="right" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editGeocacheTitle"
+                android:editable="true" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mapButton"
+            android:minWidth="125dp"
+            android:minHeight="125dp"
+            android:paddingLeft="20dp"
+            android:padding="20dp"
+            android:layout_marginLeft="20dp"
+            android:clickable="true" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.67" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Location"
+                android:id="@+id/Location"
+                android:layout_gravity="right" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editLocation"
+                android:editable="true" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/Description"
+            android:text="Description" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/editDescription"
+            android:editable="true"
+            android:minHeight="100dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout" >
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Geocache!"
+            android:id="@+id/submitCreateGeoCache" />
+    </LinearLayout>
+
 </LinearLayout>
