@@ -118,6 +118,6 @@ public class Login extends AppCompatActivity implements OnClickListener {
 
     private boolean loginSuccess(String currentUserName, String currentPassword){
         dbHelp = new DatabaseHelper(this);
-        return(dbHelp.selectAll(currentUserName, currentPassword).size() > 0);
+        return(dbHelp.selectUsernames(currentUserName, currentPassword).size() > 0);
     }
 }
