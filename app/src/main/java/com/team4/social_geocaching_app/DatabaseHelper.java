@@ -89,7 +89,7 @@ public class DatabaseHelper {
     public boolean firstTime() {
         List<String> list = new ArrayList<>();
         //Cursor cursor = this.db.query(ACCOUNT_TABLE, new String[] {"username"}, "username = '"+ username +"'", null, null, null, "username desc");
-        Cursor cursor = db.rawQuery("SELECT * FROM Accounts",null);
+        Cursor cursor = db.rawQuery("SELECT * FROM Accounts", null);
         if (cursor.moveToFirst()) {
             do {
                 list.add(cursor.getString(0));
@@ -116,6 +116,30 @@ public class DatabaseHelper {
                 g.setDescription(cursor.getString(6));
                 g.setDate(cursor.getString(7));
                 list.add(g);
+            } while (cursor.moveToNext());
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+    }
+
+    public List<Action> selectActionsByUser(String username) {
+        List<Action> list = new ArrayList<>();
+        String query = "SELECT * FROM Actions";
+        if(!username.equals("")){
+            query += " WHERE username='"+username+"'";
+        }
+        query+=" ORDER BY Timestamp DESC";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Action a = new Action();
+                a.setUsername(cursor.getString(0));
+                a.setAction(cursor.getString(1));
+                a.setCacheNum(Integer.parseInt(cursor.getString(2)));
+                a.setDate(cursor.getString(3));
+                list.add(a);
             } while (cursor.moveToNext());
         }
         if (!cursor.isClosed()) {

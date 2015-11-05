@@ -2,16 +2,20 @@ package com.team4.social_geocaching_app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyAccount extends AppCompatActivity {
 
     ImageView face;
     TextView points, geocachesFound, userName;
+    private DatabaseHelper dbHelp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,15 @@ public class MyAccount extends AppCompatActivity {
             face.setImageResource(R.drawable.defaultface);
             Toast.makeText(getApplicationContext(), "Upload a profile photo!", Toast.LENGTH_LONG).show();
         }
+
+        this.dbHelp = new DatabaseHelper(this);
+        String username = getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken");
+        dbHelp.insertAction(username, "created", 5);
+        List<Action> results = dbHelp.selectActionsByUser(username);
+        for (Action a : results) {
+        }
+        //TextView action1 = (TextView)findViewById(R.id.action1);
+        //TextView date1 = (TextView)findViewById(R.id.action1);
 
     }
 

@@ -8,31 +8,47 @@
               android:contextClickable="false"
               android:weightSum="1">
 
-    <Button
-        android:text="Maps"
-        android:id="@+id/maps_button"
-        style="@style/listButtonStyle"/>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" >
 
-    <Button
-        android:text="Near Me"
-        android:id="@+id/near_me_button"
-        style="@style/listButtonStyle"/>
-    <Button
-        android:text="Create A Cache"
-        android:id="@+id/create_cache_button"
-        style="@style/listButtonStyle"/>
-    <Button
-        android:text="Connect"
-        android:id="@+id/connect_button"
-        style="@style/listButtonStyle"/>
-    <Button
-        android:text="Leaderboards"
-        android:id="@+id/leaderboards_button"
-        style="@style/listButtonStyle"/>
-    <Button
-        android:text="Account"
-        android:id="@+id/account_button"
-        style="@style/listButtonStyle"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:text="Maps"
+                android:id="@+id/maps_button"
+                style="@style/listButtonStyle"/>
+
+            <Button
+                android:text="Near Me"
+                android:id="@+id/near_me_button"
+                style="@style/listButtonStyle"/>
+
+            <Button
+                android:text="Create A Cache"
+                android:id="@+id/create_cache_button"
+                style="@style/listButtonStyle"/>
+
+            <Button
+                android:text="Connect"
+                android:id="@+id/connect_button"
+                style="@style/listButtonStyle"/>
+
+            <Button
+                android:text="Leaderboards"
+                android:id="@+id/leaderboards_button"
+                style="@style/listButtonStyle"/>
+
+            <Button
+                android:text="Account"
+                android:id="@+id/account_button"
+                style="@style/listButtonStyle"/>
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>
