@@ -30,6 +30,10 @@ public class Login extends AppCompatActivity implements OnClickListener {
         btnLogin.setOnClickListener(this);
         btnCreate = (Button)findViewById(R.id.create_account_button);
         btnCreate.setOnClickListener(this);
+        this.dbHelp = new DatabaseHelper(this);
+        if(this.dbHelp.firstTime()){
+            Toast.makeText(getApplicationContext(), "Create an account!", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -107,7 +111,7 @@ public class Login extends AppCompatActivity implements OnClickListener {
             pref.edit().putString("userName", currentUserName).apply();
             return true;
         }else{
-            Toast.makeText(getApplicationContext(), "Loser!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Username and password do not match!", Toast.LENGTH_LONG).show();
             return false;
         }
     }

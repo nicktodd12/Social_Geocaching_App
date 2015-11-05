@@ -73,7 +73,6 @@ public class DatabaseHelper {
     public boolean usernameTaken(String username) {
         List<String> list = new ArrayList<>();
         Cursor cursor = this.db.query(ACCOUNT_TABLE, new String[] {"username"}, "username = '"+ username +"'", null, null, null, "username desc");
-        //Cursor cursor = db.rawQuery("SELECT * FROM Accounts WHERE username = ?", new String[] {username});
         if (cursor.moveToFirst()) {
             do {
                 list.add(cursor.getString(0));
@@ -83,6 +82,21 @@ public class DatabaseHelper {
             cursor.close();
         }
         return list.size() != 0;
+    }
+
+    public boolean firstTime() {
+        List<String> list = new ArrayList<>();
+        //Cursor cursor = this.db.query(ACCOUNT_TABLE, new String[] {"username"}, "username = '"+ username +"'", null, null, null, "username desc");
+        Cursor cursor = db.rawQuery("SELECT * FROM Accounts",null);
+        if (cursor.moveToFirst()) {
+            do {
+                list.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        return list.size() == 0;
     }
 
     public List<String> selectGeocaches(int cacheNum) {

@@ -73,7 +73,7 @@ public class New_User extends AppCompatActivity implements OnClickListener {
             Toast.makeText(getApplicationContext(), "Username taken!", Toast.LENGTH_LONG).show();
         }
         else if(password.length() < 6){
-            Toast.makeText(getApplicationContext(), "Make a longer password!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Password must be at least 6 characters!", Toast.LENGTH_LONG).show();
         }
         return false;
     }
