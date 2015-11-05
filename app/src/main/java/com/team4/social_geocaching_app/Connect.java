@@ -1,16 +1,44 @@
 package com.team4.social_geocaching_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class Connect extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Connect extends AppCompatActivity implements View.OnClickListener {
+    ListView connectActivities;
+    ArrayList<RowItem> itemsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
+        itemsList = new ArrayList<>();
+        for(int k = 0; k<30; k++){
+            itemsList.add(k,new RowItem("String", "DateString"));
+        }
+        ListAdapter currentAdapter = new ListAdapter(this, itemsList);
+        connectActivities = (ListView) findViewById(R.id.connectList);
+        connectActivities.setAdapter(currentAdapter);
+        connectActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                //Toast.makeText(getApplicationContext(), itemsList.get(position).activityText+"!"+position, Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+
     }
 
     @Override
@@ -33,5 +61,13 @@ public class Connect extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.connectList:
+                Toast.makeText(getApplicationContext(), "clicked on list", Toast.LENGTH_LONG).show();
+                break;
+        }
     }
 }
