@@ -50,8 +50,8 @@ public class New_User extends AppCompatActivity implements OnClickListener {
             case R.id.submit:
                 boolean success = this.CreateAccount();
                 if(success){
-                    startActivity(new Intent(this, Login.class));
                     Toast.makeText(getApplicationContext(), "Username and password are good!", Toast.LENGTH_LONG).show();
+                    finish();
                 }
                 break;
         }

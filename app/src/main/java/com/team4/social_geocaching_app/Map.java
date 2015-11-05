@@ -149,12 +149,11 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
             aboutCacheIntent.putExtras(b);
             startActivity(aboutCacheIntent);
         }else if(previousScreen.equals("CreateGeocache")){
-            Intent createCacheIntent = new Intent(this, CreateGeocache.class);
-            Bundle b = new Bundle();
-            b.putDouble("Latitude", marker.getPosition().latitude);
-            b.putDouble("Longitude", marker.getPosition().longitude);
-            createCacheIntent.putExtras(b);
-            startActivity(createCacheIntent);
+            Intent i = new Intent();
+            i.putExtra("latitude", Double.toString(marker.getPosition().latitude));
+            i.putExtra("longitude", Double.toString(marker.getPosition().longitude));
+            setResult(RESULT_OK, i);
+            finish();
         }
     }
 

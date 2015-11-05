@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 
 public class CreateGeocache extends AppCompatActivity implements OnClickListener {
 
@@ -43,13 +44,6 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         geocacheImage.setOnClickListener(this);
         latitude = (TextView)findViewById(R.id.editLatitude);
         longitude = (TextView)findViewById(R.id.editLongitude);
-        Bundle b = this.getIntent().getExtras();
-        if(b!=null ){
-            if(b.containsKey("Latitude") && b.containsKey("Longitude")){
-                latitude.setText( b.get("Latitude").toString());
-                longitude.setText( b.get("Longitude").toString());
-            }
-        }
     }
 
     @Override
@@ -104,14 +98,18 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
                 description = (EditText)findViewById(R.id.editDescription);
                 Bundle b = new Bundle();
                 b.putString("previousScreen", "CreateGeocache");
-                b.putString("Title", titleBox.getText().toString());
-                b.putString("Description", description.getText().toString());
                 Intent mapIntent = new Intent(this, Map.class);
                 mapIntent.putExtras(b);
-                startActivity(mapIntent);
-//                latitude.setText("20.995363");
-//                longitude.setText("-20.002591");
+                startActivityForResult(mapIntent, 0);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 0 && resultCode == RESULT_OK) {
+            latitude.setText(data.getStringExtra("latitude"));
+            longitude.setText(data.getStringExtra("longitude"));
         }
     }
 
