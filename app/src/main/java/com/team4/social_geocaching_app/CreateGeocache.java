@@ -39,6 +39,16 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         mapImage.setOnClickListener(this);
         geocacheImage = (ImageButton)findViewById(R.id.geocacheImage);
         geocacheImage.setOnClickListener(this);
+        latitude = (TextView)findViewById(R.id.editLatitude);
+        longitude = (TextView)findViewById(R.id.editLongitude);
+        Bundle b = this.getIntent().getExtras();
+        if(b!=null ){
+            if(b.containsKey("Latitude") && b.containsKey("Longitude")){
+            latitude.setText( b.get("Latitude").toString());
+            longitude.setText( b.get("Longitude").toString());
+            }
+        }
+
     }
 
     @Override
@@ -64,8 +74,8 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
     }
 
     public void onClick(View v) {
-        latitude = (TextView)findViewById(R.id.editLatitude);
-        longitude = (TextView)findViewById(R.id.editLongitude);
+//        latitude = (TextView)findViewById(R.id.editLatitude);
+//        longitude = (TextView)findViewById(R.id.editLongitude);
         switch (v.getId()) {
             case R.id.submitCreateGeoCache:
                 titleBox = (EditText)findViewById(R.id.editGeocacheTitle);
@@ -88,8 +98,13 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
             case R.id.mapImage:
                 //TODO: launch google maps, allow user to find geocache and place marker
                 Toast.makeText(getApplicationContext(), "This should launch map!", Toast.LENGTH_LONG).show();
-                latitude.setText("20.995363");
-                longitude.setText("-20.002591");
+                Bundle b = new Bundle();
+                b.putString("previousScreen", "CreateGeocache");
+                Intent mapIntent = new Intent(this, Map.class);
+                mapIntent.putExtras(b);
+                startActivity(mapIntent);
+//                latitude.setText("20.995363");
+//                longitude.setText("-20.002591");
                 break;
         }
     }

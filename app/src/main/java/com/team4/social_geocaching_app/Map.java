@@ -2,16 +2,15 @@ package com.team4.social_geocaching_app;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class Map extends FragmentActivity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener{
@@ -19,13 +18,17 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private DatabaseHelper dbHelp;
     List<Geocache> geocaches;
+    private String previousScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        // Set up Listeners
+        Bundle b = this.getIntent().getExtras();
+        if(b.containsKey("previousScreen")) {
 
+            previousScreen = (String) b.get("previousScreen");
+        }
         setUpMapIfNeeded();
     }
 
@@ -71,16 +74,14 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
      */
     private void setUpMap() {
 
-        // Create all Markers with their information
-        // These will be dynamically loaded from the database along with relevant info
-        // including descriptions, Images, Times Found, Creator, etc...
-        dbHelp = new DatabaseHelper(this);
-        LatLng temp = new LatLng(0.0, 0.0);
-        geocaches = dbHelp.selectGeocaches();
-        for (Geocache g: geocaches) {
-            temp = new LatLng(g.getLatitude(), g.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(temp).title(g.getCacheName()));
-        }
+        if(previousScreen.equals("HomeScreen")) {
+            dbHelp = new DatabaseHelper(this);
+            LatLng temp = new LatLng(0.0, 0.0);
+            geocaches = dbHelp.selectGeocaches();
+            for (Geocache g : geocaches) {
+                temp = new LatLng(g.getLatitude(), g.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(temp).title(g.getCacheName()));
+            }
 
         /*LatLng sydney = new LatLng(-34, 151);
         LatLng bolz = new LatLng(40.002966, -83.015217);
@@ -91,26 +92,35 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
         mMap.addMarker(new MarkerOptions().position(union).title("Ohio State Union"));
         mMap.addMarker(new MarkerOptions().position(michaelHouse).title("Michael's House").snippet(michaelHouse.toString()));*/
 
-        // Position the camera
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
+            // Position the camera
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
 
-        mMap.setOnMapClickListener((GoogleMap.OnMapClickListener) this);
-        mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
-        mMap.setOnMapLongClickListener((GoogleMap.OnMapLongClickListener) this);
-        mMap.setOnInfoWindowClickListener((GoogleMap.OnInfoWindowClickListener) this);
+            mMap.setOnMarkerClickListener( this);
+            mMap.setOnInfoWindowClickListener(this);
+        }else if(previousScreen.equals("CreateGeocache")){
+            mMap.setOnMapLongClickListener(this);
+            mMap.setOnMapClickListener( this);
+            mMap.setOnInfoWindowClickListener(this);
+            mMap.setOnMarkerClickListener(this);
 
+        }
 
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
+        if(previousScreen.equals("CreateGeocache")){
 
+        }
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
+        if(previousScreen.equals("CreateGeocache")){
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Create a Geocache Here"));
 
+        }
     }
 
     @Override
@@ -121,22 +131,31 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Intent aboutCacheIntent = new Intent(this, AboutGeocache.class);
-        Bundle b = new Bundle();
-        Geocache chosen = new Geocache();
-        for (Geocache g: geocaches) {
-            if(g.getLatitude() == marker.getPosition().latitude && g.getLongitude() == marker.getPosition().longitude){
-                chosen = g;
-                break;
+        if(previousScreen.equals("HomeScreen")) {
+            Intent aboutCacheIntent = new Intent(this, AboutGeocache.class);
+            Bundle b = new Bundle();
+            Geocache chosen = new Geocache();
+            for (Geocache g : geocaches) {
+                if (g.getLatitude() == marker.getPosition().latitude && g.getLongitude() == marker.getPosition().longitude) {
+                    chosen = g;
+                    break;
+                }
             }
+            b.putString("Title", chosen.getCacheName());
+            b.putInt("TimesFound", 0);
+            b.putString("Description", chosen.getDescription());
+            b.putDouble("Latitude", chosen.getLatitude());
+            b.putDouble("Longitude", chosen.getLongitude());
+            aboutCacheIntent.putExtras(b);
+            startActivity(aboutCacheIntent);
+        }else if(previousScreen.equals("CreateGeocache")){
+            Intent createCacheIntent = new Intent(this, CreateGeocache.class);
+            Bundle b = new Bundle();
+            b.putDouble("Latitude", marker.getPosition().latitude);
+            b.putDouble("Longitude", marker.getPosition().longitude);
+            createCacheIntent.putExtras(b);
+            startActivity(createCacheIntent);
         }
-        b.putString("Title", chosen.getCacheName());
-        b.putInt("TimesFound", 0);
-        b.putString("Description", chosen.getDescription());
-        b.putDouble("Latitude", chosen.getLatitude());
-        b.putDouble("Longitude", chosen.getLongitude());
-        aboutCacheIntent.putExtras(b);
-        startActivity(aboutCacheIntent);
     }
 
 

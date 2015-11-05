@@ -57,7 +57,11 @@ public class HomeScreen extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.maps_button:
-                startActivity(new Intent(this, Map.class));
+                Bundle b = new Bundle();
+                b.putString("previousScreen", "HomeScreen");
+                Intent mapIntent = new Intent(this, Map.class);
+                mapIntent.putExtras(b);
+                startActivity(mapIntent);
                 break;
             case R.id.near_me_button:
                 startActivity(new Intent(this, NearMe.class));
