@@ -22,6 +22,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
     TextView latitude;
     TextView longitude;
     EditText description;
+    EditText points;
     private DatabaseHelper dbHelp;
     private String currentUsername;
 
@@ -32,6 +33,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         super.onCreate(savedInstanceState);
         titleBox = (EditText)findViewById(R.id.editGeocacheTitle);
         description = (EditText)findViewById(R.id.editDescription);
+        points = (EditText)findViewById(R.id.editGeocachePoints);
         setContentView(R.layout.activity_create_cache);
         submitGeocache = (Button)findViewById(R.id.submitCreateGeoCache);
         submitGeocache.setOnClickListener(this);
@@ -44,11 +46,10 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         Bundle b = this.getIntent().getExtras();
         if(b!=null ){
             if(b.containsKey("Latitude") && b.containsKey("Longitude")){
-            latitude.setText( b.get("Latitude").toString());
-            longitude.setText( b.get("Longitude").toString());
+                latitude.setText( b.get("Latitude").toString());
+                longitude.setText( b.get("Longitude").toString());
             }
         }
-
     }
 
     @Override
@@ -82,7 +83,8 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
                 description = (EditText)findViewById(R.id.editDescription);
                 latitude = (TextView)findViewById(R.id.editLatitude);
                 longitude = (TextView)findViewById(R.id.editLongitude);
-                if(latitude.getText().toString().length() > 0 && createNewGeocache(titleBox.getText().toString(),latitude.getText().toString(),longitude.getText().toString(),description.getText().toString())){
+                points = (EditText)findViewById(R.id.editGeocachePoints);
+                if(latitude.getText().toString().length() > 0 && createNewGeocache(titleBox.getText().toString(), points.getText().toString(), latitude.getText().toString(),longitude.getText().toString(),description.getText().toString())){
                     Toast.makeText(getApplicationContext(), "Geocache " + titleBox.getText().toString() + " created!", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(this, HomeScreen.class));
                 }else if(latitude.getText().toString().length() == 0){
@@ -97,9 +99,13 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
                 break;
             case R.id.mapImage:
                 //TODO: launch google maps, allow user to find geocache and place marker
-                Toast.makeText(getApplicationContext(), "This should launch map!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Place your geocache somewhere!", Toast.LENGTH_LONG).show();
+                titleBox = (EditText)findViewById(R.id.editGeocacheTitle);
+                description = (EditText)findViewById(R.id.editDescription);
                 Bundle b = new Bundle();
                 b.putString("previousScreen", "CreateGeocache");
+                b.putString("Title", titleBox.getText().toString());
+                b.putString("Description", description.getText().toString());
                 Intent mapIntent = new Intent(this, Map.class);
                 mapIntent.putExtras(b);
                 startActivity(mapIntent);
@@ -109,11 +115,18 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         }
     }
 
-    public boolean createNewGeocache(String title, String latitude, String longitude, String description){
-        if(latitude.length() == 0 || longitude.length() == 0){
+    public boolean createNewGeocache(String title, String points, String latitude, String longitude, String description){
+        if(latitude.equals("(Latitude)")|| longitude.equals("Longitude")){
+            Toast.makeText(getApplicationContext(), "Click the map icon to get coordinates!", Toast.LENGTH_LONG).show();
+            return false;
+        }else if(title.length() == 0){
+            Toast.makeText(getApplicationContext(), "Enter a title for your Geocache!", Toast.LENGTH_LONG).show();
+            return false;
+        }else if(!(points.matches("^-?\\d+$")&&Integer.parseInt(points)>0 && Integer.parseInt(points)<21)){
+            Toast.makeText(getApplicationContext(), "Enter a positive int value for points between 1 and 20!", Toast.LENGTH_LONG).show();
             return false;
         }
-        dbHelp.insertGeocache(currentUsername, 14, Double.parseDouble(latitude), Double.parseDouble(longitude), title, description);
+        dbHelp.insertGeocache(currentUsername, Integer.parseInt(points), Double.parseDouble(latitude), Double.parseDouble(longitude), title, description);
         return true;
     }
 }
