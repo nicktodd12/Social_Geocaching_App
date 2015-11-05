@@ -22,9 +22,13 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
     TextView latitude;
     TextView longitude;
     EditText description;
+    private DatabaseHelper dbHelp;
+    private String currentUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.dbHelp = new DatabaseHelper(this);
+        currentUsername = getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken");
         super.onCreate(savedInstanceState);
         titleBox = (EditText)findViewById(R.id.editGeocacheTitle);
         description = (EditText)findViewById(R.id.editDescription);
@@ -68,7 +72,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
                 description = (EditText)findViewById(R.id.editDescription);
                 latitude = (TextView)findViewById(R.id.editLatitude);
                 longitude = (TextView)findViewById(R.id.editLongitude);
-                if(createNewGeocache(titleBox.getText().toString(),latitude.getText().toString(),longitude.getText().toString(),description.getText().toString())){
+                if(latitude.getText().toString().length() > 0 && createNewGeocache(titleBox.getText().toString(),latitude.getText().toString(),longitude.getText().toString(),description.getText().toString())){
                     Toast.makeText(getApplicationContext(), "Geocache " + titleBox.getText().toString() + " created!", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(this, HomeScreen.class));
                 }else if(latitude.getText().toString().length() == 0){
@@ -84,14 +88,17 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
             case R.id.mapImage:
                 //TODO: launch google maps, allow user to find geocache and place marker
                 Toast.makeText(getApplicationContext(), "This should launch map!", Toast.LENGTH_LONG).show();
-                latitude.setText("39.995363");
-                longitude.setText("-83.002591");
+                latitude.setText("20.995363");
+                longitude.setText("-20.002591");
                 break;
         }
     }
 
-    public static boolean createNewGeocache(String title, String latitude, String longitude, String description){
-        //TODO: make query that adds geocache to database
+    public boolean createNewGeocache(String title, String latitude, String longitude, String description){
+        if(latitude.length() == 0 || longitude.length() == 0){
+            return false;
+        }
+        dbHelp.insertGeocache(currentUsername, 14, Double.parseDouble(latitude), Double.parseDouble(longitude), title, description);
         return true;
     }
 }
