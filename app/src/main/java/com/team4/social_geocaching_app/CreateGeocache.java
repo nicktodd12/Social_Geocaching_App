@@ -124,7 +124,8 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
             Bitmap bp = (Bitmap) data.getExtras().get("data");
             geocacheImage.setImageBitmap(bp);
 
-        }    }
+        }
+    }
 
     public boolean createNewGeocache(String title, String points, String latitude, String longitude, String description){
         if(latitude.equals("(Latitude)")|| longitude.equals("Longitude")){
