@@ -19,6 +19,7 @@ public class Login extends AppCompatActivity implements OnClickListener {
     Button btnCreate;
     private static final String TAG = "LoginActivity";
     private DatabaseHelper dbHelp;
+    GPSTracker gps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class Login extends AppCompatActivity implements OnClickListener {
         btnCreate = (Button)findViewById(R.id.create_account_button);
         btnCreate.setOnClickListener(this);
         this.dbHelp = new DatabaseHelper(this);
-        if(this.dbHelp.firstTime()){
+        if(this.dbHelp.firstTime()) {
             Toast.makeText(getApplicationContext(), "Create an account!", Toast.LENGTH_LONG).show();
         }
     }

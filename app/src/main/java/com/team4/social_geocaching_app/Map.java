@@ -19,6 +19,7 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
     private DatabaseHelper dbHelp;
     List<Geocache> geocaches;
     private String previousScreen;
+    GPSTracker gps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+            mMap.setMyLocationEnabled(true);
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
@@ -83,17 +85,18 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
                 mMap.addMarker(new MarkerOptions().position(temp).title(g.getCacheName()));
             }
 
-        /*LatLng sydney = new LatLng(-34, 151);
-        LatLng bolz = new LatLng(40.002966, -83.015217);
-        LatLng union = new LatLng(39.997934, -83.008211);
-        LatLng michaelHouse = new LatLng(39.995363, -83.002591);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.addMarker(new MarkerOptions().position(bolz).title("Bolz Hall"));
-        mMap.addMarker(new MarkerOptions().position(union).title("Ohio State Union"));
-        mMap.addMarker(new MarkerOptions().position(michaelHouse).title("Michael's House").snippet(michaelHouse.toString()));*/
+            gps = new GPSTracker(this);
+            temp = new LatLng(0.0, 0.0);
+            if(gps.canGetLocation()){
+                double latitude = gps.getLatitude();
+                double longitude = gps.getLongitude();
+                temp = new LatLng(latitude, longitude);
+            }else{
+                gps.showSettingsAlert();
+            }
 
             // Position the camera
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+            //mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
 
             mMap.setOnMarkerClickListener( this);
