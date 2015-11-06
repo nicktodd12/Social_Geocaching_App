@@ -1,6 +1,7 @@
 package com.team4.social_geocaching_app;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
@@ -27,7 +29,9 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
     EditText points;
     private DatabaseHelper dbHelp;
     private String currentUsername;
-
+    private ImageView mImageView;
+    private Bitmap mImageBitmap;
+    private int CAMERA_REQUEST = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.dbHelp = new DatabaseHelper(this);
@@ -91,6 +95,9 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
             case R.id.geocacheImage:
                 //TODO: launch app to take photo of geocache, set it to this button
                 Toast.makeText(getApplicationContext(), "Take a geocache Image!", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
                 break;
             case R.id.mapImage:
                 //TODO: launch google maps, allow user to find geocache and place marker
@@ -112,7 +119,11 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
             latitude.setText(data.getStringExtra("latitude"));
             longitude.setText(data.getStringExtra("longitude"));
         }
-    }
+        if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
+            Bitmap bp = (Bitmap) data.getExtras().get("data");
+            geocacheImage.setImageBitmap(bp);
+
+        }    }
 
     public boolean createNewGeocache(String title, String points, String latitude, String longitude, String description){
         if(latitude.equals("(Latitude)")|| longitude.equals("Longitude")){

@@ -95,7 +95,7 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
             }
 
             // Position the camera
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+//            mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
 
 
