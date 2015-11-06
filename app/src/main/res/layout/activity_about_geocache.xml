@@ -7,39 +7,61 @@
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Geocache Name"
-        android:id="@+id/GeocacheTitle"
-        android:layout_above="@+id/imageView"
-        android:layout_alignLeft="@+id/imageView"
-        android:layout_alignStart="@+id/imageView"
-        android:layout_alignParentTop="true"
+        android:text="Geocache Title"
+        android:id="@+id/geocacheTitle"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
         android:textSize="40dp"
         android:textStyle="bold"
-        android:gravity="center_vertical"
-        android:layout_gravity="center_horizontal" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:weightSum="1"
+        android:layout_marginTop="20dp"
+        >
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:id="@+id/imageView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:src="@drawable/defaultface"
-            android:layout_marginLeft="40dp"
-            android:layout_alignParentBottom="true"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:minWidth="100dp"
+            android:minHeight="100dp"
+            android:id="@+id/mapButton"
+            android:src="@drawable/googlemapsicon"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:maxHeight="125dp"
+            android:maxWidth="125dp"
+            android:layout_marginLeft="20dp"
+            android:layout_weight=".33"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/foundGeocacheButton"
+            android:layout_marginLeft="10dp"
+            android:maxHeight="125dp"
+            android:maxWidth="125dp"
+            android:minHeight="100dp"
+            android:minWidth="100dp"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:layout_weight=".33"/>
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight=".33"
+            android:gravity="center_vertical|center_horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,13 +69,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Times Found"
                 android:id="@+id/timesFoundTitle"
-                android:textSize="20dp"
-                android:gravity="center"
-                android:layout_alignTop="@+id/imageView"
-                android:layout_toRightOf="@+id/imageView"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,61 +77,34 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="0"
                 android:id="@+id/timesFound"
-                android:layout_below="@+id/timesFoundTitle"
-                android:gravity="center"
-                android:layout_toRightOf="@+id/imageView"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
+                android:textSize="40sp"
                 android:textStyle="bold"
-                android:textSize="40dp"
-                android:layout_gravity="center_horizontal" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Point Value"
-                android:id="@+id/pointsTitle"
-                android:textSize="20dp"
-                android:gravity="center"
-                android:layout_alignTop="@+id/imageView"
-                android:layout_toRightOf="@+id/imageView"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="center_horizontal" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="0"
-                android:id="@+id/points"
-                android:layout_below="@+id/timesFoundTitle"
-                android:gravity="center"
-                android:layout_toRightOf="@+id/imageView"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:textStyle="bold"
-                android:textSize="40dp"
-                android:layout_gravity="center_horizontal" />
+                android:gravity="center_vertical"/>
         </LinearLayout>
+
     </LinearLayout>
 
     <TextView
-        android:layout_width="335dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Description"
         android:id="@+id/textDescriptionTitle"
         android:paddingTop="20dp"
-        android:textSize="30dp"
-        android:layout_gravity="center_horizontal"/>
+        android:textSize="30sp"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
     <TextView
-        android:layout_width="332dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Generic Text Description"
         android:id="@+id/textDescription"
         android:paddingTop="10dp"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
+
 </LinearLayout>

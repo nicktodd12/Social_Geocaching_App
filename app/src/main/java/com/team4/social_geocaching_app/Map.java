@@ -86,7 +86,6 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
             }
 
             gps = new GPSTracker(this);
-            temp = new LatLng(0.0, 0.0);
             if(gps.canGetLocation()){
                 double latitude = gps.getLatitude();
                 double longitude = gps.getLongitude();
@@ -96,8 +95,9 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
             }
 
             // Position the camera
-            //mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
+
 
             mMap.setOnMarkerClickListener( this);
             mMap.setOnInfoWindowClickListener(this);
@@ -106,6 +106,8 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
             mMap.setOnMapClickListener( this);
             mMap.setOnInfoWindowClickListener(this);
             mMap.setOnMarkerClickListener(this);
+
+        }else if(previousScreen.equals("AboutGeocache")){
 
         }
 
@@ -163,12 +165,6 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
     }
 
 
-//    @Override
-//    public void onMapReady(GoogleMap map) {
-//        // Add a marker in Sydney, Australia, and move the camera.
-//        LatLng sydney = new LatLng(-34, 151);
-//        LatLng columbus = new LatLng(40.002966, -83.015217);
-//        map.addMarker(new MarkerOptions().position(columbus).title("Marker in Sydney"));
-//        map.moveCamera(CameraUpdateFactory.newLatLng(columbus));
-//    }
+
+
 }
