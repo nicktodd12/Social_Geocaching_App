@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
+import java.util.List;
 
 public class CreateGeocache extends AppCompatActivity implements OnClickListener {
 
@@ -125,6 +126,9 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
             return false;
         }
         dbHelp.insertGeocache(currentUsername, Integer.parseInt(points), Double.parseDouble(latitude), Double.parseDouble(longitude), title, description);
+        List<Geocache> results = dbHelp.selectGeocaches();
+        int cacheNum = results.get(0).getCacheNum();
+        dbHelp.insertAction(currentUsername, "created", cacheNum);
         return true;
     }
 }

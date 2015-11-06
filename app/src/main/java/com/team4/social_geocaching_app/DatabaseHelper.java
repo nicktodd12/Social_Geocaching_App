@@ -103,7 +103,7 @@ public class DatabaseHelper {
 
     public List<Geocache> selectGeocaches() {
         List<Geocache> list = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM Geocaches", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM Geocaches ORDER BY cacheNum DESC", null);
         if (cursor.moveToFirst()) {
             do {
                 Geocache g = new Geocache();

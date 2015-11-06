@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyAccount extends AppCompatActivity {
@@ -44,6 +43,8 @@ public class MyAccount extends AppCompatActivity {
             if(a.getAction().equals("found")){
                 point += a.getPoints();
                 found += 1;
+            }else {
+                Log.d("MyAccount", a.getUsername() + " created Cache NO: " + a.getCacheNum() + " on " + a.getDate());
             }
         }
         points.setText(Integer.toString(point));
