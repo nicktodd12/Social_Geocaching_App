@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Connect extends AppCompatActivity implements View.OnClickListener {
     ListView connectActivities;
@@ -24,8 +25,10 @@ public class Connect extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
         itemsList = new ArrayList<>();
-        for(int k = 0; k<30; k++){
-            itemsList.add(k,new RowItem("String", "DateString"));
+        DatabaseHelper dbHelp = new DatabaseHelper(getApplicationContext());
+        List<Action> actionsList = dbHelp.selectActionsByUser("");
+        for(int k = 0; k<actionsList.size(); k++){
+            itemsList.add(k,new RowItem(actionsList.get(k).getUsername(), actionsList.get(k).getDate()));
         }
         ListAdapter currentAdapter = new ListAdapter(this, itemsList);
         connectActivities = (ListView) findViewById(R.id.connectList);
