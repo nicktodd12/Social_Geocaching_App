@@ -18,10 +18,14 @@ public class AboutGeocache extends AppCompatActivity {
         TextView GeocacheTitle = (TextView) findViewById(R.id.GeocacheTitle);
         TextView TimesFound = (TextView) findViewById(R.id.timesFound);
         TextView Description = (TextView) findViewById(R.id.textDescription);
+        TextView Points = (TextView) findViewById(R.id.points);
 
         Description.setText((String) b.get("Description"));
         GeocacheTitle.setText((String) b.get("Title"));
-        TimesFound.setText( b.get("TimesFound").toString());
+        int timesFound = (Integer)b.get("TimesFound");
+        int pointVal = (Integer)b.get("Points");
+        TimesFound.setText(Integer.toString(timesFound));
+        Points.setText(Integer.toString(pointVal));
     }
 
     @Override

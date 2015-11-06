@@ -20,12 +20,12 @@ public class MyAccount extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
         face = (ImageView) findViewById(R.id.userImage);
-        points = (TextView) findViewById(R.id.points);
+        //points = (TextView) findViewById(R.id.points);
         geocachesFound = (TextView) findViewById(R.id.found);
         userName = (TextView) findViewById(R.id.username);
 
         //TODO: pull total points from db, total number geocaches found
-        points.setText("5800");
+        //points.setText("5800");
         geocachesFound.setText("14");
         userName.setText(getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken"));
         //TODO: check if user has image uploaded

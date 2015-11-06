@@ -142,10 +142,12 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
                 }
             }
             b.putString("Title", chosen.getCacheName());
-            b.putInt("TimesFound", 0);
+            //TODO: make TimesFound actually do times found
+            b.putInt("TimesFound", chosen.getPoints());
             b.putString("Description", chosen.getDescription());
             b.putDouble("Latitude", chosen.getLatitude());
             b.putDouble("Longitude", chosen.getLongitude());
+            b.putInt("Points", chosen.getPoints());
             aboutCacheIntent.putExtras(b);
             startActivity(aboutCacheIntent);
         }else if(previousScreen.equals("CreateGeocache")){
