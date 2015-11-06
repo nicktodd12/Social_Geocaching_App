@@ -22,7 +22,7 @@ public class DatabaseHelper {
     private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(username, password) values (?, ?)";
     private static final String NEW_GEOCACHE_QUERY = "insert into " + GEOCACHE_TABLE + "(username, points, latitude, longitude, cacheName, description) " +
             "values (?, ?, ?, ?, ?, ?)";
-    private static final String NEW_ACTION_QUERY = "insert into " + ACTION_TABLE + "(username, action, cacheNum) values (?, ?, ?)";
+    private static final String NEW_ACTION_QUERY = "insert into " + ACTION_TABLE + "(username, action, cacheNum, comment) values (?, ?, ?, ?)";
 
     public DatabaseHelper(Context context) {
         this.context = context;
@@ -48,11 +48,12 @@ public class DatabaseHelper {
         return this.currentStmt.executeInsert();
     }
 
-    public long insertAction(String username, String action, int cacheNum) {
+    public long insertAction(String username, String action, int cacheNum, String comment) {
         this.currentStmt = this.db.compileStatement(NEW_ACTION_QUERY);
         this.currentStmt.bindString(1, username);
         this.currentStmt.bindString(2, action);
         this.currentStmt.bindLong(3, cacheNum);
+        this.currentStmt.bindString(4, comment);
         return this.currentStmt.executeInsert();
     }
 
@@ -88,7 +89,6 @@ public class DatabaseHelper {
 
     public boolean firstTime() {
         List<String> list = new ArrayList<>();
-        //Cursor cursor = this.db.query(ACCOUNT_TABLE, new String[] {"username"}, "username = '"+ username +"'", null, null, null, "username desc");
         Cursor cursor = db.rawQuery("SELECT * FROM Accounts", null);
         if (cursor.moveToFirst()) {
             do {
@@ -101,9 +101,14 @@ public class DatabaseHelper {
         return list.size() == 0;
     }
 
-    public List<Geocache> selectGeocaches() {
+    public List<Geocache> selectGeocaches(int cacheNum) {
         List<Geocache> list = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM Geocaches ORDER BY cacheNum DESC", null);
+        String query = "SELECT * FROM Geocaches";
+        if(cacheNum>0){
+            query += " WHERE cacheNum="+cacheNum;
+        }
+        query+=" ORDER BY cacheNum DESC";
+        Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
                 Geocache g = new Geocache();
@@ -124,10 +129,14 @@ public class DatabaseHelper {
         return list;
     }
 
-    public List<Action> selectActionsByUser(String username) {
+    public List<Action> selectActions(String username, int cacheNum) {
         List<Action> list = new ArrayList<>();
         String query = "SELECT * FROM Actions LEFT OUTER JOIN Geocaches ON Actions.cacheNum=Geocaches.cacheNum";
-        if(!username.equals("")){
+        if(!username.equals("") && cacheNum>0){
+            query += " WHERE Actions.username='"+username+"' AND Actions.cacheNum="+cacheNum;
+        }else if(cacheNum>0) {
+            query += " WHERE Actions.cacheNum="+cacheNum;
+        }else if(!username.equals("")){
             query += " WHERE Actions.username='"+username+"'";
         }
         query+=" ORDER BY Timestamp DESC";
@@ -138,8 +147,9 @@ public class DatabaseHelper {
                 a.setUsername(cursor.getString(0));
                 a.setAction(cursor.getString(1));
                 a.setCacheNum(Integer.parseInt(cursor.getString(2)));
-                a.setDate(cursor.getString(3));
-                a.setPoints(Integer.parseInt(cursor.getString(6)));
+                a.setComment(cursor.getColumnName(3));
+                a.setDate(cursor.getString(4));
+                a.setPoints(Integer.parseInt(cursor.getString(7)));
                 list.add(a);
             } while (cursor.moveToNext());
         }
@@ -159,7 +169,7 @@ public class DatabaseHelper {
             db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(username TEXT PRIMARY KEY, password TEXT)");
             db.execSQL("CREATE TABLE " + GEOCACHE_TABLE + "(cacheNum INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, points INTEGER, " +
                     "latitude REAL, longitude REAL, cacheName TEXT, description TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
-            db.execSQL("CREATE TABLE " + ACTION_TABLE + "(username TEXT, action TEXT, cacheNum INTEGER, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+            db.execSQL("CREATE TABLE " + ACTION_TABLE + "(username TEXT, action TEXT, cacheNum INTEGER, comment TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
                     "PRIMARY KEY(username, action, cacheNUM))");
         }
 

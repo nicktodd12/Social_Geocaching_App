@@ -78,10 +78,9 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
 
         if(previousScreen.equals("HomeScreen")) {
             dbHelp = new DatabaseHelper(this);
-            LatLng temp = new LatLng(0.0, 0.0);
-            geocaches = dbHelp.selectGeocaches();
+            geocaches = dbHelp.selectGeocaches(0);
             for (Geocache g : geocaches) {
-                temp = new LatLng(g.getLatitude(), g.getLongitude());
+                LatLng temp = new LatLng(g.getLatitude(), g.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(temp).title(g.getCacheName()));
             }
 
@@ -89,23 +88,33 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
             if(gps.canGetLocation()){
                 double latitude = gps.getLatitude();
                 double longitude = gps.getLongitude();
-                temp = new LatLng(latitude, longitude);
+                LatLng temp = new LatLng(latitude, longitude);
+                // Position the camera
+                mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
             }else{
                 gps.showSettingsAlert();
             }
-
-            // Position the camera
-//            mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
-
 
             mMap.setOnMarkerClickListener( this);
             mMap.setOnInfoWindowClickListener(this);
         }else if(previousScreen.equals("CreateGeocache")){
             mMap.setOnMapLongClickListener(this);
-            mMap.setOnMapClickListener( this);
+            mMap.setOnMapClickListener(this);
             mMap.setOnInfoWindowClickListener(this);
             mMap.setOnMarkerClickListener(this);
+
+            gps = new GPSTracker(this);
+            if(gps.canGetLocation()){
+                double latitude = gps.getLatitude();
+                double longitude = gps.getLongitude();
+                LatLng temp = new LatLng(latitude, longitude);
+                // Position the camera
+                mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
+            }else{
+                gps.showSettingsAlert();
+            }
 
         }else if(previousScreen.equals("AboutGeocache")){
 

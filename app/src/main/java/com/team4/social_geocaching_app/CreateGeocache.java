@@ -137,9 +137,9 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
             return false;
         }
         dbHelp.insertGeocache(currentUsername, Integer.parseInt(points), Double.parseDouble(latitude), Double.parseDouble(longitude), title, description);
-        List<Geocache> results = dbHelp.selectGeocaches();
+        List<Geocache> results = dbHelp.selectGeocaches(0);
         int cacheNum = results.get(0).getCacheNum();
-        dbHelp.insertAction(currentUsername, "created", cacheNum);
+        dbHelp.insertAction(currentUsername, "created", cacheNum, "");
         return true;
     }
 }

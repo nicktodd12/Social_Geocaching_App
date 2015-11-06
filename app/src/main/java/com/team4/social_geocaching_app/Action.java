@@ -9,6 +9,7 @@ public class Action {
     private int cacheNum;
     private String date;
     private int points;
+    private String comment;
 
     public void setUsername(String username){
         this.username = username;
@@ -30,6 +31,10 @@ public class Action {
         this.points = points;
     }
 
+    public void setComment(String comment){
+        this.comment = comment;
+    }
+
     public String getUsername(){
         return username;
     }
@@ -48,5 +53,9 @@ public class Action {
 
     public int getPoints(){
         return points;
+    }
+
+    public String getComment(){
+        return comment;
     }
 }

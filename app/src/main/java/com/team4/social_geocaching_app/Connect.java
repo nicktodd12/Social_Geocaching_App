@@ -26,7 +26,7 @@ public class Connect extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_connect);
         itemsList = new ArrayList<>();
         DatabaseHelper dbHelp = new DatabaseHelper(getApplicationContext());
-        List<Action> actionsList = dbHelp.selectActionsByUser("");
+        List<Action> actionsList = dbHelp.selectActions("", 0);
         for(int k = 0; k<actionsList.size(); k++){
             itemsList.add(k,new RowItem(actionsList.get(k).getUsername(), actionsList.get(k).getDate()));
         }

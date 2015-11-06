@@ -13,7 +13,7 @@ import java.util.List;
 public class MyAccount extends AppCompatActivity {
 
     ImageView face;
-    TextView points, geocachesFound, userName;
+    TextView points, geocachesFound, geocachesCreated, userName;
     private DatabaseHelper dbHelp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +22,7 @@ public class MyAccount extends AppCompatActivity {
         face = (ImageView) findViewById(R.id.userImage);
         points = (TextView) findViewById(R.id.points);
         geocachesFound = (TextView) findViewById(R.id.found);
+        geocachesCreated = (TextView) findViewById(R.id.created);
         userName = (TextView) findViewById(R.id.username);
 
         //TODO: pull total points from db, total number geocaches found
@@ -37,21 +38,19 @@ public class MyAccount extends AppCompatActivity {
 
         this.dbHelp = new DatabaseHelper(this);
         String username = getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken");
-        List<Action> results = dbHelp.selectActionsByUser(username);
-        int point = 0, found = 0;
+        List<Action> results = dbHelp.selectActions(username, 0);
+        int point = 0, found = 0, created=0;
         for (Action a : results) {
             if(a.getAction().equals("found")){
                 point += a.getPoints();
                 found += 1;
             }else {
-                Log.d("MyAccount", a.getUsername() + " created Cache NO: " + a.getCacheNum() + " on " + a.getDate());
+                created += 1;
             }
         }
         points.setText(Integer.toString(point));
         geocachesFound.setText(Integer.toString(found));
-        //TextView action1 = (TextView)findViewById(R.id.action1);
-        //TextView date1 = (TextView)findViewById(R.id.action1);
-
+        geocachesCreated.setText(Integer.toString(created));
     }
 
     @Override
