@@ -1,6 +1,7 @@
 package com.team4.social_geocaching_app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -140,6 +141,8 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         List<Geocache> results = dbHelp.selectGeocaches(0);
         int cacheNum = results.get(0).getCacheNum();
         dbHelp.insertAction(currentUsername, "created", cacheNum, "");
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("CacheList", 0);
+        pref.edit().putString(Integer.toString(cacheNum), title).apply();
         return true;
     }
 }

@@ -2,6 +2,7 @@ package com.team4.social_geocaching_app;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -9,8 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class AboutGeocache extends AppCompatActivity implements View.OnClickListener{
 
@@ -24,19 +28,48 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
         TextView GeocacheTitle = (TextView) findViewById(R.id.geocacheTitle);
         TextView TimesFound = (TextView) findViewById(R.id.timesFound);
         TextView Description = (TextView) findViewById(R.id.textDescription);
-        TextView Points = (TextView) findViewById(R.id.points);
+        TextView Points = (TextView) findViewById(R.id.pointValue);
+        TextView CreatedBy = (TextView) findViewById(R.id.createdBy);
 
         Description.setText((String) b.get("Description"));
         GeocacheTitle.setText((String) b.get("Title"));
-        int timesFound = (Integer)b.get("TimesFound");
-        int pointVal = (Integer)b.get("Points");
-        TimesFound.setText(Integer.toString(timesFound));
-//        Points.setText(Integer.toString(pointVal));
+        //COMMENTED CODE TRIES TO SET THE DATE OF CREATION
+        /*String created = (String)b.get("User");
+        DatabaseHelper dbHelp = new DatabaseHelper(this);
+        List<Action> currentGCAction = dbHelp.selectActions((String)b.get("User"),-1);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("CacheList", 0);
 
-        ImageButton foundButton = (ImageButton) findViewById(R.id.foundGeocacheButton);
-        ImageButton mapButton = (ImageButton) findViewById(R.id.mapButton);
-        foundButton.setOnClickListener(this);
+
+        //pref.edit().putString(Integer.toString(cacheNum), title).apply();
+        for(int k=0; k<currentGCAction.size(); k++){
+            if(pref.getString(Integer.toString(currentGCAction.get(k).getCacheNum()),"OOPS").equals(b.get("Title"))){
+               List<Geocache> currentGC = dbHelp.selectGeocaches(currentGCAction.get(k).getCacheNum());
+                if(currentGC.size() == 1){
+                    CreatedBy.setText(currentGC.get(0).getDate());
+                }else{
+                    Toast.makeText(getApplicationContext(), "SOMETHIN WRONG", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }*/
+        int timesFound = (Integer)b.get("TimesFound");
+        if(b.get("TimesFound") != null && timesFound > -1){
+            TimesFound.setText(Integer.toString(timesFound));
+        }
+
+        int pointVal = (Integer)b.get("Points");
+        if(b.get("Points") != null && pointVal > 0){
+            Points.setText(Integer.toString(pointVal));
+        }
+
+
+        ImageButton imageButton = (ImageButton) findViewById(R.id.geocacheImageButton);
+        ImageButton mapButton = (ImageButton) findViewById(R.id.mapImage);
+        Button checkInButton = (Button) findViewById(R.id.checkInButton);
+        imageButton.setOnClickListener(this);
         mapButton.setOnClickListener(this);
+
+        checkInButton.setOnClickListener(this);
     }
 
     @Override
@@ -66,12 +99,11 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
 //        latitude = (TextView)findViewById(R.id.editLatitude);
 //        longitude = (TextView)findViewById(R.id.editLongitude);
         switch (v.getId()) {
-            case R.id.foundGeocacheButton:
-                //TODO: launch app to take photo of geocache, set it to this button
+            case R.id.geocacheImageButton:
                 Toast.makeText(getApplicationContext(), "navigate to found Geocache", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(this, FoundGeocache.class));
-                break;
-            case R.id.mapButton:
+                //TODO: launch app to take photo of geocache, set it to this button
+
+            case R.id.mapImage:
                 //TODO: launch google maps, allow user to find geocache and place marker
                 Toast.makeText(getApplicationContext(), "Place your geocache somewhere!", Toast.LENGTH_LONG).show();
                 Bundle b = new Bundle();
@@ -79,6 +111,10 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
                 Intent mapIntent = new Intent(this, Map.class);
                 mapIntent.putExtras(b);
                 startActivityForResult(mapIntent, 0);
+                break;
+            case R.id.checkInButton:
+                //TODO: launch Found geocache activity
+                startActivity(new Intent(this, FoundGeocache.class));
                 break;
         }
     }
