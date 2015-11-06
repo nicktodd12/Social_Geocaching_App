@@ -9,81 +9,69 @@
     android:orientation="vertical"
               android:gravity="center_vertical">
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView3" >
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="New User"
+        android:id="@+id/textView"
+        android:textColor="@color/white"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="40dp"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"/>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <EditText
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/username"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0"
+        android:paddingRight="10dp"
+        android:background="@color/white"
+        android:phoneNumber="false"
+        android:password="false"
+        android:height="50dp"
+        android:paddingLeft="10dp"
+        android:hint="username"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="New User"
-                android:id="@+id/textView"
-                android:textColor="@color/white"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:textSize="40dp"
-                android:layout_marginTop="0dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="20dp"/>
+    <EditText
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/password"
+        android:background="@color/white"
+        android:phoneNumber="false"
+        android:password="false"
+        android:height="50dp"
+        android:width="340dp"
+        android:layout_gravity="center_horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="0"
+        android:hint="password"
+        android:layout_below="@+id/username"
+        android:layout_centerHorizontal="true" />
 
-            <EditText
-                android:layout_width="340dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/username"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0"
-                android:paddingRight="10dp"
-                android:background="@color/white"
-                android:phoneNumber="false"
-                android:password="false"
-                android:height="50dp"
-                android:paddingLeft="10dp"
-                android:hint="username"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="0dp" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:id="@+id/submit"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp" />
 
-            <EditText
-                android:layout_width="340dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/password"
-                android:background="@color/white"
-                android:phoneNumber="false"
-                android:password="false"
-                android:height="50dp"
-                android:width="340dp"
-                android:layout_gravity="center_horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0"
-                android:hint="password"
-                android:layout_below="@+id/username"
-                android:layout_centerHorizontal="true" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Submit"
-                android:id="@+id/submit"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_gravity="center_horizontal"
-                android:layout_below="@+id/password"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_gravity="center_horizontal"/>
-        </LinearLayout>
-    </ScrollView>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

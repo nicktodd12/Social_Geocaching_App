@@ -81,7 +81,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
                 points = (EditText)findViewById(R.id.editGeocachePoints);
                 if(latitude.getText().toString().length() > 0 && createNewGeocache(titleBox.getText().toString(), points.getText().toString(), latitude.getText().toString(),longitude.getText().toString(),description.getText().toString())){
                     Toast.makeText(getApplicationContext(), "Geocache " + titleBox.getText().toString() + " created!", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(this, HomeScreen.class));
+                    finish();
                 }else if(latitude.getText().toString().length() == 0){
                     Toast.makeText(getApplicationContext(), "Click the map button!", Toast.LENGTH_LONG).show();
                 }else{
