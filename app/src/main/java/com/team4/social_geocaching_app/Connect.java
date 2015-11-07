@@ -37,10 +37,10 @@ public class Connect extends AppCompatActivity implements View.OnClickListener {
             action = actionsList.get(k).getAction();
             cacheNum = actionsList.get(k).getCacheNum();
             gC = dbHelp.selectGeocaches(cacheNum);
-            points = actionsList.get(k).getCacheNum();
             if (action.equals("created")||action.equals("create")) {
                 itemsList.add(k,new RowItem(username+" created "+gC.get(0).getCacheName(), date));
             }else{
+                points = actionsList.get(k).getPoints();
                 itemsList.add(k,new RowItem(username+" found "+gC.get(0).getCacheName()+" ("+points+" points)",date));
             }
 

@@ -19,7 +19,7 @@ public class DatabaseHelper {
     private Context context;
     private SQLiteDatabase db;
     private SQLiteStatement currentStmt;
-    private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(username, password, points) values (?, ?, ?)";
+    private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(username, password) values (?, ?)";
     private static final String NEW_GEOCACHE_QUERY = "insert into " + GEOCACHE_TABLE + "(username, points, latitude, longitude, cacheName, description, image) " +
             "values (?, ?, ?, ?, ?, ?, ?)";
     private static final String NEW_ACTION_QUERY = "insert into " + ACTION_TABLE + "(username, action, cacheNum, comment) values (?, ?, ?, ?)";
@@ -50,17 +50,16 @@ public class DatabaseHelper {
         this.insertAction("C", "created", 5, "comment");
         this.insertAction("C", "created", 6, "comment2");
         this.insertAction("D", "created", 7, "comment3");
-        this.insertAction("D", "checkin", 1, "comment3");
-        this.insertAction("D", "checkin", 3, "comment3");
-        this.insertAction("A", "checkin", 5, "comment3");
-        this.insertAction("B", "checkin", 1, "comment3");
+        this.insertAction("D", "found", 1, "comment3");
+        this.insertAction("D", "found", 3, "comment3");
+        this.insertAction("A", "found", 5, "comment3");
+        this.insertAction("B", "found", 1, "comment3");
     }
 
     public long insertAccount(String username, String password) {
         this.currentStmt = this.db.compileStatement(NEW_USER_QUERY);
         this.currentStmt.bindString(1, username);
         this.currentStmt.bindString(2, password);
-        this.currentStmt.bindLong(3, 0);
         return this.currentStmt.executeInsert();
     }
 
@@ -188,6 +187,26 @@ public class DatabaseHelper {
         return list;
     }
 
+    public List<Account> getLeaderboard() {
+        List<Account> list = new ArrayList<>();
+        String query = "SELECT * FROM (SELECT Actions.username AS username, SUM(Geocaches.points) AS points " +
+                "FROM Actions LEFT OUTER JOIN Geocaches ON Actions.cacheNum=Geocaches.cacheNum" +
+                " WHERE action='found' GROUP BY Actions.username) ORDER BY points DESC";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Account a = new Account();
+                a.setUsername(cursor.getString(0));
+                a.setPoints(Integer.parseInt(cursor.getString(1)));
+                list.add(a);
+            } while (cursor.moveToNext());
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+    }
+
     private static class GeocacheOpenHelper extends SQLiteOpenHelper {
         GeocacheOpenHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -195,7 +214,7 @@ public class DatabaseHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(username TEXT PRIMARY KEY, password TEXT, points INTEGER)");
+            db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(username TEXT PRIMARY KEY, password TEXT)");
             db.execSQL("CREATE TABLE " + GEOCACHE_TABLE + "(cacheNum INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, points INTEGER, " +
                     "latitude REAL, longitude REAL, cacheName TEXT, description TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, image BLOB)");
             db.execSQL("CREATE TABLE " + ACTION_TABLE + "(username TEXT, action TEXT, cacheNum INTEGER, comment TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +

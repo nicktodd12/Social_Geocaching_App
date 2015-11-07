@@ -4,24 +4,32 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Leaderboards extends AppCompatActivity implements View.OnClickListener{
     ListView connectActivities;
     ArrayList<RowItem> itemsList;
+    DatabaseHelper dbHelp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboards);
+        dbHelp = new DatabaseHelper(this);
+        List<Account> results = dbHelp.getLeaderboard();
         itemsList = new ArrayList<>();
+        for(int k = 0; k<results.size(); k++){
+            itemsList.add(k, new RowItem(results.get(k).getUsername(), Integer.toString(results.get(k).getPoints())));
+        }
+
         DatabaseHelper dbHelp = new DatabaseHelper(getApplicationContext());
         /*
         List<Action> actionsList = dbHelp.selectActions("", 0);
@@ -49,7 +57,7 @@ public class Leaderboards extends AppCompatActivity implements View.OnClickListe
         connectActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                //Toast.makeText(getApplicationContext(), itemsList.get(position).activityText+"!"+position, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), itemsList.get(position).activityText+"!"+position, Toast.LENGTH_LONG).show();
             }
         });
 
