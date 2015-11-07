@@ -156,6 +156,7 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
                 }
             }
             b.putString("Title", chosen.getCacheName());
+            b.putInt("CacheNum", chosen.getCacheNum());
             //TODO: make TimesFound actually do times found
             b.putInt("TimesFound", chosen.getPoints());
             b.putString("Description", chosen.getDescription());

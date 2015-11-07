@@ -29,19 +29,29 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
         TextView TimesFound = (TextView) findViewById(R.id.timesFound);
         TextView Description = (TextView) findViewById(R.id.textDescription);
         TextView Points = (TextView) findViewById(R.id.pointValue);
-        TextView CreatedBy = (TextView) findViewById(R.id.createdBy);
+        TextView CreatedBy = (TextView) findViewById(R.id.createdByTitle);
+        TextView Date = (TextView) findViewById(R.id.createdBy);
+        TextView Latitude = (TextView) findViewById(R.id.editLatitude);
+        TextView Longitude = (TextView) findViewById(R.id.editLongitude);
 
         Description.setText((String) b.get("Description"));
         GeocacheTitle.setText((String) b.get("Title"));
+        if(b.get("Latitude") != null){
+            Latitude.setText(Double.toString((Double)b.get("Latitude")));
+        }
+
+        if(b.get("Latitude") != null){
+            Longitude.setText(Double.toString((Double)b.get("Longitude")));
+        }
+
         //COMMENTED CODE TRIES TO SET THE DATE OF CREATION
-        /*String created = (String)b.get("User");
+        String created = (String)b.get("User");
         DatabaseHelper dbHelp = new DatabaseHelper(this);
-        List<Action> currentGCAction = dbHelp.selectActions((String)b.get("User"),-1);
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("CacheList", 0);
+        List<Action> currentGCAction = dbHelp.selectActions("",(Integer)b.get("CacheNum"));
+        CreatedBy.append(currentGCAction.get(0).getUsername());
+        Date.setText(currentGCAction.get(0).getDate());
 
-
-        //pref.edit().putString(Integer.toString(cacheNum), title).apply();
-        for(int k=0; k<currentGCAction.size(); k++){
+        /*for(int k=0; k<currentGCAction.size(); k++){
             if(pref.getString(Integer.toString(currentGCAction.get(k).getCacheNum()),"OOPS").equals(b.get("Title"))){
                List<Geocache> currentGC = dbHelp.selectGeocaches(currentGCAction.get(k).getCacheNum());
                 if(currentGC.size() == 1){
@@ -100,17 +110,17 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
 //        longitude = (TextView)findViewById(R.id.editLongitude);
         switch (v.getId()) {
             case R.id.geocacheImageButton:
-                Toast.makeText(getApplicationContext(), "navigate to found Geocache", Toast.LENGTH_LONG).show();
                 //TODO: launch app to take photo of geocache, set it to this button
-
+                break;
             case R.id.mapImage:
-                //TODO: launch google maps, allow user to find geocache and place marker
+                //TODO: launch google maps, show geocache on map, dont allow movement or zooming or placing
+                /*
                 Toast.makeText(getApplicationContext(), "Place your geocache somewhere!", Toast.LENGTH_LONG).show();
                 Bundle b = new Bundle();
                 b.putString("previousScreen", "AboutGeocache");
                 Intent mapIntent = new Intent(this, Map.class);
                 mapIntent.putExtras(b);
-                startActivityForResult(mapIntent, 0);
+                startActivityForResult(mapIntent, 0);*/
                 break;
             case R.id.checkInButton:
                 //TODO: launch Found geocache activity

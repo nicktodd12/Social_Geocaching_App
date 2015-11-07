@@ -26,9 +26,25 @@ public class Connect extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_connect);
         itemsList = new ArrayList<>();
         DatabaseHelper dbHelp = new DatabaseHelper(getApplicationContext());
+        //dbHelp.fillAppWithData();
         List<Action> actionsList = dbHelp.selectActions("", 0);
+        String username, date, action;
+        List<Geocache> gC;
+        int cacheNum, points;
         for(int k = 0; k<actionsList.size(); k++){
-            itemsList.add(k,new RowItem(actionsList.get(k).getUsername(), actionsList.get(k).getDate()));
+            username = actionsList.get(k).getUsername();
+            date = actionsList.get(k).getDate();
+            action = actionsList.get(k).getAction();
+            cacheNum = actionsList.get(k).getCacheNum();
+            gC = dbHelp.selectGeocaches(cacheNum);
+            points = actionsList.get(k).getCacheNum();
+            if (action.equals("created")||action.equals("create")) {
+                itemsList.add(k,new RowItem(username+" created "+gC.get(0).getCacheName(), date));
+            }else{
+                itemsList.add(k,new RowItem(username+" found "+gC.get(0).getCacheName()+" ("+points+" points)",date));
+            }
+
+
         }
         ListAdapter currentAdapter = new ListAdapter(this, itemsList);
         connectActivities = (ListView) findViewById(R.id.connectList);

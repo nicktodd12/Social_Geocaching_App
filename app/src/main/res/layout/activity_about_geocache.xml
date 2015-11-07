@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Created: "
+                android:text="Created by: "
                 android:id="@+id/createdByTitle" />
 
             <TextView

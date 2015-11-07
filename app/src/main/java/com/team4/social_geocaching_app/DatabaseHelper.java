@@ -30,6 +30,31 @@ public class DatabaseHelper {
         this.db = openHelper.getWritableDatabase();
     }
 
+    public void fillAppWithData(){
+        this.insertAccount("A", "aaaaaa");
+        this.insertAccount("B", "bbbbbb");
+        this.insertAccount("C", "cccccc");
+        this.insertAccount("D", "dddddd");
+        this.insertGeocache("A", 12, 41.40338, 2.17403, "A1", "This is a cache");
+        this.insertGeocache("A", 2, 41.40338, 2.17403, "A2", "This is a cache");
+        this.insertGeocache("B",4,4.40338,21.17403,"B","This is a cache");
+        this.insertGeocache("C", 2, 2.41, 1.7541, "C1", "This is a cache");
+        this.insertGeocache("C", 1, 4.0338, 2.7403, "C2", "This is a cache");
+        this.insertGeocache("C", 2, 23.338, 23.34, "C3", "This is a cache");
+        this.insertGeocache("D", 1, 1.4238, 5.67, "D", "This is a cache");
+        this.insertAction("A", "created", 1, "comment");
+        this.insertAction("A", "created", 2, "comment2");
+        this.insertAction("B", "created", 3, "comment3");
+        this.insertAction("C", "created", 4, "comment4");
+        this.insertAction("C", "created", 5, "comment");
+        this.insertAction("C", "created", 6, "comment2");
+        this.insertAction("D", "created", 7, "comment3");
+        this.insertAction("D", "checkin", 1, "comment3");
+        this.insertAction("D", "checkin", 3, "comment3");
+        this.insertAction("A", "checkin", 5, "comment3");
+        this.insertAction("B", "checkin", 1, "comment3");
+    }
+
     public long insertAccount(String username, String password) {
         this.currentStmt = this.db.compileStatement(NEW_USER_QUERY);
         this.currentStmt.bindString(1, username);
