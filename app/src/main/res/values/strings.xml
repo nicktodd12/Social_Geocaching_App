@@ -16,4 +16,5 @@
 
     <string name="title_activity_new__user">New_User</string>
     <string name="title_activity_home_screen">HomeScreen</string>
+    <string name="title_activity_geocache_visit">GeocacheVisit</string>
 </resources>

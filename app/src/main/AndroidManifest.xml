@@ -16,60 +16,62 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-feature android:name="android.hardware.camera"
-                  android:required="true"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_title"
         android:theme="@style/GreenActionBarTheme" >
         <activity
-            android:theme="@style/NoBar"
             android:name=".Login"
-            android:label="@string/app_title">
+            android:label="@string/app_title"
+            android:theme="@style/NoBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:theme="@style/GreenActionBarTheme"
             android:name=".HomeScreen"
-            android:label="@string/app_title">
+            android:label="@string/app_title"
+            android:theme="@style/GreenActionBarTheme" >
         </activity>
-
         <activity
             android:name=".New_User"
-            android:theme="@style/NoBar"
-            android:label="@string/app_title" >
+            android:label="@string/app_title"
+            android:theme="@style/NoBar" >
         </activity>
         <activity
             android:name=".AboutGeocache"
-            android:theme="@style/GreenActionBarTheme"
-            android:label="@string/title_about_geocache" >
+            android:label="@string/title_about_geocache"
+            android:theme="@style/GreenActionBarTheme" >
         </activity>
         <activity
             android:name=".Connect"
-            android:theme="@style/GreenActionBarTheme"
-            android:label="@string/title_connect" >
+            android:label="@string/title_connect"
+            android:theme="@style/GreenActionBarTheme" >
         </activity>
         <activity
             android:name=".CreateGeocache"
-            android:theme="@style/GreenActionBarTheme"
-            android:label="@string/title_create_geocache" >
+            android:label="@string/title_create_geocache"
+            android:theme="@style/GreenActionBarTheme" >
         </activity>
         <activity
             android:name=".FoundGeocache"
-            android:theme="@style/GreenActionBarTheme"
-            android:label="@string/title_found_geocache" >
+            android:label="@string/title_found_geocache"
+            android:theme="@style/GreenActionBarTheme" >
         </activity>
         <activity
             android:name=".Leaderboards"
-            android:theme="@style/GreenActionBarTheme"
-            android:label="@string/title_leaderboards" >
+            android:label="@string/title_leaderboards"
+            android:theme="@style/GreenActionBarTheme" >
         </activity>
 
         <meta-data
@@ -78,22 +80,27 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
+
         <activity
             android:name=".Map"
-            android:theme="@style/GreenActionBarTheme"
-            android:label="@string/title_map" >
+            android:label="@string/title_map"
+            android:theme="@style/GreenActionBarTheme" >
         </activity>
         <activity
             android:name=".MyAccount"
-            android:theme="@style/GreenActionBarTheme"
-            android:label="@string/title_my_account" >
+            android:label="@string/title_my_account"
+            android:theme="@style/GreenActionBarTheme" >
         </activity>
         <activity
             android:name=".NearMe"
-            android:theme="@style/GreenActionBarTheme"
-            android:label="@string/title_near_me" >
+            android:label="@string/title_near_me"
+            android:theme="@style/GreenActionBarTheme" >
         </activity>
-        <!--Google Maps API Key = AIzaSyDVshHA3Rh13Zzyajlm-QLrpHaOsFdK0r4-->
+        <!-- Google Maps API Key = AIzaSyDVshHA3Rh13Zzyajlm-QLrpHaOsFdK0r4 -->
+        <activity
+            android:name=".GeocacheVisit"
+            android:label="@string/title_activity_geocache_visit" >
+        </activity>
     </application>
 
 </manifest>

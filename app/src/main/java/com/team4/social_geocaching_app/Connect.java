@@ -19,17 +19,25 @@ import java.util.List;
 public class Connect extends AppCompatActivity implements View.OnClickListener {
     ListView connectActivities;
     ArrayList<RowItem> itemsList;
+    List<Action> actionsList;
+    List<Geocache> gC;
+    DatabaseHelper dbHelp;
+    Intent aboutCacheIntent;
+    Intent viewCacheIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
         itemsList = new ArrayList<>();
-        DatabaseHelper dbHelp = new DatabaseHelper(getApplicationContext());
+        dbHelp = new DatabaseHelper(getApplicationContext());
         //dbHelp.fillAppWithData();
-        List<Action> actionsList = dbHelp.selectActions("", 0);
+        actionsList = dbHelp.selectActions("", 0);
+        aboutCacheIntent = new Intent(this,AboutGeocache.class);
+        viewCacheIntent = new Intent(this,GeocacheVisit.class);
+
         String username, date, action;
-        List<Geocache> gC;
+
         int cacheNum, points;
         for(int k = 0; k<actionsList.size(); k++){
             username = actionsList.get(k).getUsername();
@@ -52,7 +60,27 @@ public class Connect extends AppCompatActivity implements View.OnClickListener {
         connectActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                //Toast.makeText(getApplicationContext(), itemsList.get(position).activityText+"!"+position, Toast.LENGTH_LONG).show();
+                Bundle b = new Bundle();
+                gC = dbHelp.selectGeocaches(actionsList.get(position).getCacheNum());
+                if(actionsList.get(position).getAction().equals("created")||actionsList.get(position).getAction().equals("created"))
+                {
+                    b.putString("Title", gC.get(0).getCacheName());
+                    b.putInt("CacheNum", gC.get(0).getCacheNum());
+                    //TODO: make TimesFound actually do times found??
+                    b.putInt("TimesFound", gC.get(0).getPoints());
+                    b.putString("Description", gC.get(0).getDescription());
+                    b.putDouble("Latitude", gC.get(0).getLatitude());
+                    b.putDouble("Longitude", gC.get(0).getLongitude());
+                    b.putInt("Points", gC.get(0).getPoints());
+                    b.putByteArray("Image", gC.get(0).getImage());
+                    aboutCacheIntent.putExtras(b);
+                    startActivity(aboutCacheIntent);
+                }else{
+                    b.putInt("CacheNum", gC.get(0).getCacheNum());
+                    b.putString("Username", actionsList.get(position).getUsername());
+                    viewCacheIntent.putExtras(b);
+                    startActivity(viewCacheIntent);
+                }
             }
         });
 
