@@ -1,6 +1,7 @@
 package com.team4.social_geocaching_app;
 
 import android.content.DialogInterface;
+import android.util.Log;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -9,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,6 +24,7 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
     DatabaseHelper dbHelp;
     Button checkInButton;
     TextView TimesFound;
+    double latitude, longitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,10 +47,12 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
         GeocacheTitle.setText((String) b.get("Title"));
         if(b.get("Latitude") != null){
             Latitude.setText(Double.toString((Double)b.get("Latitude")));
+            latitude = b.getDouble("Latitude");
         }
 
-        if(b.get("Latitude") != null){
+        if(b.get("Longitude") != null){
             Longitude.setText(Double.toString((Double)b.get("Longitude")));
+            longitude = b.getDouble("Longitude");
         }
 
         String created = (String)b.get("User");
@@ -135,13 +138,14 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.mapImage:
                 //TODO: launch google maps, show geocache on map, dont allow movement or zooming or placing
-                /*
-                Toast.makeText(getApplicationContext(), "Place your geocache somewhere!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Place your geocache somewhere!", Toast.LENGTH_LONG).show();
                 Bundle b = new Bundle();
                 b.putString("previousScreen", "AboutGeocache");
+                b.putDouble("latitude", latitude);
+                b.putDouble("longitude", longitude);
                 Intent mapIntent = new Intent(this, Map.class);
                 mapIntent.putExtras(b);
-                startActivityForResult(mapIntent, 0);*/
+                startActivity(mapIntent);
                 break;
             case R.id.checkInButton:
                 //TODO: launch Found geocache activity
