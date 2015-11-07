@@ -20,6 +20,7 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
     List<Geocache> geocaches;
     private String previousScreen;
     GPSTracker gps;
+    double latitude, longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,13 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
         if(b.containsKey("previousScreen")) {
 
             previousScreen = (String) b.get("previousScreen");
+        }
+        if(b.get("latitude") != null){
+            latitude = b.getDouble("latitude");
+        }
+
+        if(b.get("longitude") != null){
+            longitude = b.getDouble("longitude");
         }
         setUpMapIfNeeded();
     }
@@ -117,6 +125,10 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
             }
 
         }else if(previousScreen.equals("AboutGeocache")){
+            LatLng temp = new LatLng(latitude, longitude);
+            mMap.addMarker(new MarkerOptions().position(temp));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
 
         }
 
