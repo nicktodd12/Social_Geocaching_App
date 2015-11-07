@@ -56,7 +56,7 @@ public class NearMe extends AppCompatActivity {
         itemsList = new ArrayList<>();
         aboutCacheIntent = new Intent(this,AboutGeocache.class);
         for(int k=0; k<nearMe.size(); k++){
-            itemsList.add(k, new RowItem(nearMe.get(k).getCacheName(), Double.toString(nearMe.get(k).getDistanceFromMe())));
+            itemsList.add(k, new RowItem(nearMe.get(k).getCacheName(), Double.toString(nearMe.get(k).getDistanceFromMe())+" miles"));
         }
         ListAdapter currentAdapter = new ListAdapter(this, itemsList);
         connectActivities = (ListView) findViewById(R.id.nearMeList);

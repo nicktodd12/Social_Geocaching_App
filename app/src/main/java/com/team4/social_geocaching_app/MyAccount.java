@@ -9,16 +9,20 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyAccount extends AppCompatActivity implements View.OnClickListener{
@@ -28,6 +32,11 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
     private DatabaseHelper dbHelp;
     private int CAMERA_REQUEST = 1;
     private int GALLERY_REQUEST = 2;
+    ListView connectActivities;
+    ArrayList<RowItem> itemsList;
+    Intent aboutCacheIntent;
+    Intent viewCacheIntent;
+    List<Action> actionsList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,13 +46,29 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
         geocachesFound = (TextView) findViewById(R.id.found);
         geocachesCreated = (TextView) findViewById(R.id.created);
         userName = (TextView) findViewById(R.id.username);
+        aboutCacheIntent = new Intent(this,AboutGeocache.class);
+        viewCacheIntent = new Intent(this,GeocacheVisit.class);
 
-        face.setOnClickListener(this);
+
         //TODO: pull total points from db, total number geocaches found
         //points.setText("5800");
         //geocachesFound.setText("14");
-        userName.setText(getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken"));
         //TODO: check if user has image uploaded
+
+        Bundle b = this.getIntent().getExtras();
+        String username = getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken");
+        if(this.getIntent().getStringExtra("accountName") != null){
+
+            username = b.getString("accountName");
+
+            if(username.equals(getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken"))){
+                face.setOnClickListener(this);
+            }
+        }else{
+            face.setOnClickListener(this);
+        }
+        userName.setText(username);
+
 
         if(true){
             face.setImageResource(R.drawable.defaultface);
@@ -51,7 +76,6 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
         }
 
         this.dbHelp = new DatabaseHelper(this);
-        String username = getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken");
         List<Action> results = dbHelp.selectActions(username, 0);
         int point = 0, found = 0, created=0;
         for (Action a : results) {
@@ -65,6 +89,57 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
         points.setText(Integer.toString(point));
         geocachesFound.setText(Integer.toString(found));
         geocachesCreated.setText(Integer.toString(created));
+
+        itemsList = new ArrayList<RowItem>();
+        actionsList = dbHelp.selectActions(username, 0);
+        String date, action;
+        Geocache currentCache;
+
+        int cacheNum, points;
+        for(int k = 0; k<actionsList.size(); k++){
+            date = actionsList.get(k).getDate();
+            action = actionsList.get(k).getAction();
+            cacheNum = actionsList.get(k).getCacheNum();
+            currentCache = dbHelp.selectGeocaches(cacheNum).get(0);
+            if (action.equals("created")||action.equals("create")) {
+                itemsList.add(k,new RowItem(username+" created "+currentCache.getCacheName(), date));
+            }else{
+                points = actionsList.get(k).getPoints();
+                itemsList.add(k,new RowItem(username+" found "+currentCache.getCacheName()+" \n("+points+" points)",date));
+            }
+
+
+        }
+        ListAdapter currentAdapter = new ListAdapter(this, itemsList);
+        connectActivities = (ListView) findViewById(R.id.activityList);
+        connectActivities.setAdapter(currentAdapter);
+        TextView activityTitle = (TextView) findViewById(R.id.activityTitle);
+        activityTitle.setText("Recent activities");
+        connectActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Bundle b = new Bundle();
+                List<Geocache> gC = dbHelp.selectGeocaches(actionsList.get(position).getCacheNum());
+                if (actionsList.get(position).getAction().equals("created") || actionsList.get(position).getAction().equals("created")) {
+                    b.putString("Title", gC.get(0).getCacheName());
+                    b.putInt("CacheNum", gC.get(0).getCacheNum());
+                    //TODO: make TimesFound actually do times found??
+                    b.putInt("TimesFound", gC.get(0).getPoints());
+                    b.putString("Description", gC.get(0).getDescription());
+                    b.putDouble("Latitude", gC.get(0).getLatitude());
+                    b.putDouble("Longitude", gC.get(0).getLongitude());
+                    b.putInt("Points", gC.get(0).getPoints());
+                    b.putByteArray("Image", gC.get(0).getImage());
+                    aboutCacheIntent.putExtras(b);
+                    startActivity(aboutCacheIntent);
+                } else {
+                    b.putInt("CacheNum", gC.get(0).getCacheNum());
+                    b.putString("Username", actionsList.get(position).getUsername());
+                    viewCacheIntent.putExtras(b);
+                    startActivity(viewCacheIntent);
+                }
+            }
+        });
     }
 
     @Override

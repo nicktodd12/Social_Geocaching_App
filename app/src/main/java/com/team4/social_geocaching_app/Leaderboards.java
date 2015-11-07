@@ -1,6 +1,7 @@
 package com.team4.social_geocaching_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ public class Leaderboards extends AppCompatActivity implements View.OnClickListe
     ArrayList<RowItem> itemsList;
     DatabaseHelper dbHelp;
     ListView leaders;
+    Intent viewAccount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,9 +28,10 @@ public class Leaderboards extends AppCompatActivity implements View.OnClickListe
         dbHelp = new DatabaseHelper(this);
         List<Account> results = dbHelp.getLeaderboard();
         List<Account> allAccounts = dbHelp.getAllAccounts();
+        viewAccount = new Intent(this, MyAccount.class);
         itemsList = new ArrayList<>();
         for(int k = 0; k<results.size(); k++){
-            itemsList.add(k, new RowItem(results.get(k).getUsername(), Integer.toString(results.get(k).getPoints())));
+            itemsList.add(k, new RowItem(results.get(k).getUsername(), Integer.toString(results.get(k).getPoints())+" points"));
         }
         String currentUser;
         boolean print;
@@ -43,13 +46,22 @@ public class Leaderboards extends AppCompatActivity implements View.OnClickListe
                 }
             }
             if(print){
-                itemsList.add(itemsList.size(), new RowItem(currentUser, "0"));
+                itemsList.add(itemsList.size(), new RowItem(currentUser, "0 points"));
             }
         }
 
         ListAdapter currentAdapter = new ListAdapter(this, itemsList);
         leaders = (ListView) findViewById(R.id.leaderboardList);
         leaders.setAdapter(currentAdapter);
+        leaders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Bundle b = new Bundle();
+                b.putString("accountName", itemsList.get(position).activityText);
+                viewAccount.putExtras(b);
+                startActivity(viewAccount);
+                }
+        });
     }
 
     @Override
