@@ -163,6 +163,7 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
             b.putDouble("Latitude", chosen.getLatitude());
             b.putDouble("Longitude", chosen.getLongitude());
             b.putInt("Points", chosen.getPoints());
+            b.putByteArray("Image", chosen.getImage());
             aboutCacheIntent.putExtras(b);
             startActivity(aboutCacheIntent);
         }else if(previousScreen.equals("CreateGeocache")){

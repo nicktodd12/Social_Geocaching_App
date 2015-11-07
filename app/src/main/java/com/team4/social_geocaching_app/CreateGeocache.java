@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public class CreateGeocache extends AppCompatActivity implements OnClickListener {
@@ -32,6 +34,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
     private String currentUsername;
     private ImageView mImageView;
     private Bitmap mImageBitmap;
+    private byte[] imageByteStream;
     private int CAMERA_REQUEST = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
                 latitude = (TextView)findViewById(R.id.editLatitude);
                 longitude = (TextView)findViewById(R.id.editLongitude);
                 points = (EditText)findViewById(R.id.editGeocachePoints);
-                if(latitude.getText().toString().length() > 0 && createNewGeocache(titleBox.getText().toString(), points.getText().toString(), latitude.getText().toString(),longitude.getText().toString(),description.getText().toString())){
+                if(latitude.getText().toString().length() > 0 && createNewGeocache(titleBox.getText().toString(), points.getText().toString(), latitude.getText().toString(),longitude.getText().toString(),description.getText().toString(), imageByteStream)){
                     Toast.makeText(getApplicationContext(), "Geocache " + titleBox.getText().toString() + " created!", Toast.LENGTH_LONG).show();
                     finish();
                 }else if(latitude.getText().toString().length() == 0){
@@ -123,11 +126,14 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             Bitmap bp = (Bitmap) data.getExtras().get("data");
             geocacheImage.setImageBitmap(bp);
-
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+            imageByteStream = outputStream.toByteArray();
+//TODO: modify database to contain this bytestream
         }
     }
 
-    public boolean createNewGeocache(String title, String points, String latitude, String longitude, String description){
+    public boolean createNewGeocache(String title, String points, String latitude, String longitude, String description, byte[] imageInBytes){
         if(latitude.equals("(Latitude)")|| longitude.equals("Longitude")){
             Toast.makeText(getApplicationContext(), "Click the map icon to get coordinates!", Toast.LENGTH_LONG).show();
             return false;
@@ -138,7 +144,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
             Toast.makeText(getApplicationContext(), "Enter a positive int value for points between 1 and 20!", Toast.LENGTH_LONG).show();
             return false;
         }
-        dbHelp.insertGeocache(currentUsername, Integer.parseInt(points), Double.parseDouble(latitude), Double.parseDouble(longitude), title, description);
+        dbHelp.insertGeocache(currentUsername, Integer.parseInt(points), Double.parseDouble(latitude), Double.parseDouble(longitude), title, description, imageInBytes);
         List<Geocache> results = dbHelp.selectGeocaches(0);
         int cacheNum = results.get(0).getCacheNum();
         dbHelp.insertAction(currentUsername, "created", cacheNum, "");

@@ -3,6 +3,7 @@ package com.team4.social_geocaching_app;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -76,9 +77,15 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
         }
 
 
+
+
         ImageButton imageButton = (ImageButton) findViewById(R.id.geocacheImageButton);
         ImageButton mapButton = (ImageButton) findViewById(R.id.mapImage);
         Button checkInButton = (Button) findViewById(R.id.checkInButton);
+        byte[] image = (byte[]) b.get("Image");
+        if(b.get("Image") != null){
+            imageButton.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+        }
         imageButton.setOnClickListener(this);
         mapButton.setOnClickListener(this);
 

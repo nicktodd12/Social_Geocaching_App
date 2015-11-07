@@ -20,8 +20,8 @@ public class DatabaseHelper {
     private SQLiteDatabase db;
     private SQLiteStatement currentStmt;
     private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(username, password) values (?, ?)";
-    private static final String NEW_GEOCACHE_QUERY = "insert into " + GEOCACHE_TABLE + "(username, points, latitude, longitude, cacheName, description) " +
-            "values (?, ?, ?, ?, ?, ?)";
+    private static final String NEW_GEOCACHE_QUERY = "insert into " + GEOCACHE_TABLE + "(username, points, latitude, longitude, cacheName, description, image) " +
+            "values (?, ?, ?, ?, ?, ?, ?)";
     private static final String NEW_ACTION_QUERY = "insert into " + ACTION_TABLE + "(username, action, cacheNum, comment) values (?, ?, ?, ?)";
 
     public DatabaseHelper(Context context) {
@@ -35,13 +35,13 @@ public class DatabaseHelper {
         this.insertAccount("B", "bbbbbb");
         this.insertAccount("C", "cccccc");
         this.insertAccount("D", "dddddd");
-        this.insertGeocache("A", 12, 41.40338, 2.17403, "A1", "This is a cache");
-        this.insertGeocache("A", 2, 41.40338, 2.17403, "A2", "This is a cache");
-        this.insertGeocache("B",4,4.40338,21.17403,"B","This is a cache");
-        this.insertGeocache("C", 2, 2.41, 1.7541, "C1", "This is a cache");
-        this.insertGeocache("C", 1, 4.0338, 2.7403, "C2", "This is a cache");
-        this.insertGeocache("C", 2, 23.338, 23.34, "C3", "This is a cache");
-        this.insertGeocache("D", 1, 1.4238, 5.67, "D", "This is a cache");
+        this.insertGeocache("A", 12, 41.40338, 2.17403, "A1", "This is a cache", null);
+        this.insertGeocache("A", 2, 41.40338, 2.17403, "A2", "This is a cache", null);
+        this.insertGeocache("B",4,4.40338,21.17403,"B","This is a cache", null);
+        this.insertGeocache("C", 2, 2.41, 1.7541, "C1", "This is a cache", null);
+        this.insertGeocache("C", 1, 4.0338, 2.7403, "C2", "This is a cache", null);
+        this.insertGeocache("C", 2, 23.338, 23.34, "C3", "This is a cache", null);
+        this.insertGeocache("D", 1, 1.4238, 5.67, "D", "This is a cache", null);
         this.insertAction("A", "created", 1, "comment");
         this.insertAction("A", "created", 2, "comment2");
         this.insertAction("B", "created", 3, "comment3");
@@ -62,7 +62,7 @@ public class DatabaseHelper {
         return this.currentStmt.executeInsert();
     }
 
-    public long insertGeocache(String username, int points, double latitude, double longitude, String cacheName, String description) {
+    public long insertGeocache(String username, int points, double latitude, double longitude, String cacheName, String description, byte[] image) {
         this.currentStmt = this.db.compileStatement(NEW_GEOCACHE_QUERY);
         this.currentStmt.bindString(1, username);
         this.currentStmt.bindLong(2, points);
@@ -70,6 +70,7 @@ public class DatabaseHelper {
         this.currentStmt.bindDouble(4, longitude);
         this.currentStmt.bindString(5, cacheName);
         this.currentStmt.bindString(6, description);
+        this.currentStmt.bindBlob(7, image);
         return this.currentStmt.executeInsert();
     }
 
@@ -145,6 +146,7 @@ public class DatabaseHelper {
                 g.setCacheName(cursor.getString(5));
                 g.setDescription(cursor.getString(6));
                 g.setDate(cursor.getString(7));
+                g.setImage(cursor.getBlob(8));
                 list.add(g);
             } while (cursor.moveToNext());
         }
@@ -193,7 +195,7 @@ public class DatabaseHelper {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(username TEXT PRIMARY KEY, password TEXT)");
             db.execSQL("CREATE TABLE " + GEOCACHE_TABLE + "(cacheNum INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, points INTEGER, " +
-                    "latitude REAL, longitude REAL, cacheName TEXT, description TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
+                    "latitude REAL, longitude REAL, cacheName TEXT, description TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, image BLOB)");
             db.execSQL("CREATE TABLE " + ACTION_TABLE + "(username TEXT, action TEXT, cacheNum INTEGER, comment TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
                     "PRIMARY KEY(username, action, cacheNUM))");
         }

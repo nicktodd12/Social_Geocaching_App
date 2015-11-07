@@ -12,6 +12,7 @@ public class Geocache {
     private String cacheName;
     private String date;
     private String description;
+    private byte[] image;
 
     public int getCacheNum(){
         return cacheNum;
@@ -43,6 +44,8 @@ public class Geocache {
         return description;
     }
 
+    public byte[] getImage() { return image;}
+
     public void setUsername(String username){
         this.username = username;
     }
@@ -66,6 +69,9 @@ public class Geocache {
     public void setDescription(String description){
         this.description=description;
     }
+
+    public void setImage(byte[] image){this.image = image;}
+
     public void setCachenum(int cachNum){
         this.cacheNum = cachNum;
     }
