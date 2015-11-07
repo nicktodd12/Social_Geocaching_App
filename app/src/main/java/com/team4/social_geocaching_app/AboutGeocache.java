@@ -43,7 +43,7 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
         if(b.get("Latitude") != null){
             Longitude.setText(Double.toString((Double)b.get("Longitude")));
         }
-        
+
         String created = (String)b.get("User");
         DatabaseHelper dbHelp = new DatabaseHelper(this);
         List<Action> currentGCAction = dbHelp.selectActions("",(Integer)b.get("CacheNum"));
