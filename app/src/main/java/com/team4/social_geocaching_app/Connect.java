@@ -49,7 +49,7 @@ public class Connect extends AppCompatActivity implements View.OnClickListener {
                 itemsList.add(k,new RowItem(username+" created "+gC.get(0).getCacheName(), date));
             }else{
                 points = actionsList.get(k).getPoints();
-                itemsList.add(k,new RowItem(username+" found "+gC.get(0).getCacheName()+" ("+points+" points)",date));
+                itemsList.add(k,new RowItem(username+" found "+gC.get(0).getCacheName()+" \n("+points+" points)",date));
             }
 
 

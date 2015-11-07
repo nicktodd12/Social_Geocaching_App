@@ -18,6 +18,7 @@ import android.widget.Toast;
 public class Leaderboards extends AppCompatActivity implements View.OnClickListener{
     ArrayList<RowItem> itemsList;
     DatabaseHelper dbHelp;
+    ListView leaders;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +46,10 @@ public class Leaderboards extends AppCompatActivity implements View.OnClickListe
                 itemsList.add(itemsList.size(), new RowItem(currentUser, "0"));
             }
         }
+
+        ListAdapter currentAdapter = new ListAdapter(this, itemsList);
+        leaders = (ListView) findViewById(R.id.leaderboardList);
+        leaders.setAdapter(currentAdapter);
     }
 
     @Override

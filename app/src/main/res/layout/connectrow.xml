@@ -8,16 +8,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
-                android:minWidth="50dp"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp" />
+            android:paddingRight="20dp"
+            android:minWidth="200dp" />
 
         <TextView
                 android:id="@+id/connectrowtime"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
             android:gravity="right"
-            android:paddingRight="15dp" />
+            android:paddingRight="15dp"
+            android:minWidth="150dp" />
 
 </LinearLayout>

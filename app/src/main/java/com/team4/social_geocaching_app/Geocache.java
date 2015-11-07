@@ -48,7 +48,8 @@ public class Geocache {
     public byte[] getImage() { return image;}
 
     public double getDistanceFromMe(){
-        return distanceFromMe;
+        return (double)Math.round(distanceFromMe * 100d) / 100d;
+        //return Math.round(distanceFromMe, 2);
     }
 
     public void setUsername(String username){

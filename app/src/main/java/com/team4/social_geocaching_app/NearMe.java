@@ -22,6 +22,7 @@ public class NearMe extends AppCompatActivity {
     Intent aboutCacheIntent;
     DatabaseHelper dbHelp;
     GPSTracker gps;
+    List<Geocache> nearMe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,7 @@ public class NearMe extends AppCompatActivity {
         dbHelp = new DatabaseHelper(this);
         gps = new GPSTracker(this);
         gC = dbHelp.selectGeocaches(0);
-        List<Geocache> nearMe = new ArrayList<>();
+        nearMe = new ArrayList<>();
         if(gps.canGetLocation()){
             Location myLoc = new Location("me");
             myLoc.setLatitude(gps.getLatitude());
@@ -40,7 +41,7 @@ public class NearMe extends AppCompatActivity {
                 geocache.setLatitude(g.getLatitude());
                 geocache.setLongitude(g.getLongitude());
                 double distanceFromMe = (myLoc.distanceTo(geocache))*0.000621371;
-                if(distanceFromMe<=25.0){
+                if(distanceFromMe<=1000000.0){
                     g.setDistanceFromMe(distanceFromMe);
                     nearMe.add(g);
                 }
@@ -48,17 +49,14 @@ public class NearMe extends AppCompatActivity {
 
             Collections.sort(nearMe, new NearMeComp());
 
-            for (Geocache g: nearMe) {
-                Log.d("Near", g.getCacheName() + " " + g.getDistanceFromMe());
-            }
         }else{
             gps.showSettingsAlert();
         }
 
         itemsList = new ArrayList<>();
         aboutCacheIntent = new Intent(this,AboutGeocache.class);
-        for(int k=0; k<gC.size(); k++){
-            itemsList.add(k, new RowItem(gC.get(k).getCacheName(), k+" miles"));
+        for(int k=0; k<nearMe.size(); k++){
+            itemsList.add(k, new RowItem(nearMe.get(k).getCacheName(), Double.toString(nearMe.get(k).getDistanceFromMe())));
         }
         ListAdapter currentAdapter = new ListAdapter(this, itemsList);
         connectActivities = (ListView) findViewById(R.id.nearMeList);
@@ -68,15 +66,15 @@ public class NearMe extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Bundle b = new Bundle();
-
-                b.putString("Title", gC.get(position).getCacheName());
-                b.putInt("CacheNum", gC.get(position).getCacheNum());
-                b.putInt("TimesFound", gC.get(position).getPoints());
-                b.putString("Description", gC.get(position).getDescription());
-                b.putDouble("Latitude", gC.get(position).getLatitude());
-                b.putDouble("Longitude", gC.get(position).getLongitude());
-                b.putInt("Points", gC.get(position).getPoints());
-                b.putByteArray("Image", gC.get(position).getImage());
+                Geocache gC = nearMe.get(position);
+                b.putString("Title", gC.getCacheName());
+                b.putInt("CacheNum", gC.getCacheNum());
+                b.putInt("TimesFound",gC.getPoints());
+                b.putString("Description", gC.getDescription());
+                b.putDouble("Latitude",gC.getLatitude());
+                b.putDouble("Longitude", gC.getLongitude());
+                b.putInt("Points", gC.getPoints());
+                b.putByteArray("Image", gC.getImage());
                 aboutCacheIntent.putExtras(b);
                 startActivity(aboutCacheIntent);
             }
