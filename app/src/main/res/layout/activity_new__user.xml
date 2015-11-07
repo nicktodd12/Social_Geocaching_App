@@ -55,9 +55,9 @@
         android:layout_marginTop="10dp"
         android:layout_weight="0"
         android:hint="password"
-        android:inputType="textPassword"
         android:layout_below="@+id/username"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:inputType="textPassword"/>
 
     <Button
         android:layout_width="wrap_content"

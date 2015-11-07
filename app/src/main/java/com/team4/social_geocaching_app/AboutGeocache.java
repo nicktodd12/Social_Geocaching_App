@@ -18,12 +18,14 @@ import java.util.List;
 
 public class AboutGeocache extends AppCompatActivity implements View.OnClickListener{
 
+    Bundle b;
+    int cN;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_geocache);
 
-        Bundle b = getIntent().getExtras();
+        b = getIntent().getExtras();
 
         TextView GeocacheTitle = (TextView) findViewById(R.id.geocacheTitle);
         TextView TimesFound = (TextView) findViewById(R.id.timesFound);
@@ -33,6 +35,8 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
         TextView Date = (TextView) findViewById(R.id.createdBy);
         TextView Latitude = (TextView) findViewById(R.id.editLatitude);
         TextView Longitude = (TextView) findViewById(R.id.editLongitude);
+
+        cN = (Integer)b.get("CacheNum");
 
         Description.setText((String) b.get("Description"));
         GeocacheTitle.setText((String) b.get("Title"));
@@ -123,7 +127,12 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.checkInButton:
                 //TODO: launch Found geocache activity
-                startActivity(new Intent(this, FoundGeocache.class));
+                Bundle bz = new Bundle();
+
+                bz.putInt("CacheNum", cN);
+                Intent foundGeoCacheIntent = new Intent(this, FoundGeocache.class);
+                foundGeoCacheIntent.putExtras(bz);
+                startActivity(foundGeoCacheIntent);
                 break;
         }
     }
