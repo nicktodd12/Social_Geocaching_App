@@ -17,6 +17,9 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
 
     EditText comments;
     Button submit;
+    DatabaseHelper dbHelp;
+    int cacheNum;
+    Geocache geocache;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,9 +27,9 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
         submit = (Button) findViewById(R.id.submitCheckIn);
         submit.setOnClickListener(this);
         Bundle b = getIntent().getExtras();
-        int cacheNum = (b.getInt("CacheNum"));
-        DatabaseHelper dbHelp = new DatabaseHelper(this);
-        Geocache geocache =  dbHelp.selectGeocaches(cacheNum).get(0);
+        cacheNum = (b.getInt("CacheNum"));
+        dbHelp = new DatabaseHelper(this);
+        geocache =  dbHelp.selectGeocaches(cacheNum).get(0);
         //List<Action> actionList = dbHelp.selectActions(geocache.getUsername(), cacheNum);
         TextView title = (TextView) findViewById(R.id.checkInTitle);
         TextView creator = (TextView) findViewById(R.id.createdBy);
@@ -61,7 +64,11 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.submitCheckIn:
-                Toast.makeText(getApplicationContext(), "QUARTRUS", Toast.LENGTH_LONG).show();
+                String comment = comments.getText().toString();
+                String username = getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken");
+                dbHelp.insertAction(username, "found", cacheNum, comment);
+                Toast.makeText(getApplicationContext(), "Cache "+ geocache.getCacheName() +" Found!", Toast.LENGTH_LONG).show();
+                finish();
                 break;
             default:
                 break;

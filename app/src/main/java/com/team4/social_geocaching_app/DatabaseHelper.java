@@ -19,7 +19,7 @@ public class DatabaseHelper {
     private Context context;
     private SQLiteDatabase db;
     private SQLiteStatement currentStmt;
-    private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(username, password) values (?, ?)";
+    private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(username, password, points) values (?, ?, ?)";
     private static final String NEW_GEOCACHE_QUERY = "insert into " + GEOCACHE_TABLE + "(username, points, latitude, longitude, cacheName, description, image) " +
             "values (?, ?, ?, ?, ?, ?, ?)";
     private static final String NEW_ACTION_QUERY = "insert into " + ACTION_TABLE + "(username, action, cacheNum, comment) values (?, ?, ?, ?)";
@@ -35,13 +35,14 @@ public class DatabaseHelper {
         this.insertAccount("B", "bbbbbb");
         this.insertAccount("C", "cccccc");
         this.insertAccount("D", "dddddd");
-        this.insertGeocache("A", 12, 41.40338, 2.17403, "A1", "This is a cache", null);
-        this.insertGeocache("A", 2, 41.40338, 2.17403, "A2", "This is a cache", null);
-        this.insertGeocache("B",4,4.40338,21.17403,"B","This is a cache", null);
-        this.insertGeocache("C", 2, 2.41, 1.7541, "C1", "This is a cache", null);
-        this.insertGeocache("C", 1, 4.0338, 2.7403, "C2", "This is a cache", null);
-        this.insertGeocache("C", 2, 23.338, 23.34, "C3", "This is a cache", null);
-        this.insertGeocache("D", 1, 1.4238, 5.67, "D", "This is a cache", null);
+        byte[] pic = new byte[0];
+        this.insertGeocache("A", 12, 41.40338, 2.17403, "A1", "This is a cache", pic);
+        this.insertGeocache("A", 2, 41.40338, 2.17403, "A2", "This is a cache", pic);
+        this.insertGeocache("B",4,4.40338,21.17403,"B","This is a cache", pic);
+        this.insertGeocache("C", 2, 2.41, 1.7541, "C1", "This is a cache", pic);
+        this.insertGeocache("C", 1, 4.0338, 2.7403, "C2", "This is a cache", pic);
+        this.insertGeocache("C", 2, 23.338, 23.34, "C3", "This is a cache", pic);
+        this.insertGeocache("D", 1, 1.4238, 5.67, "D", "This is a cache", pic);
         this.insertAction("A", "created", 1, "comment");
         this.insertAction("A", "created", 2, "comment2");
         this.insertAction("B", "created", 3, "comment3");
@@ -59,6 +60,7 @@ public class DatabaseHelper {
         this.currentStmt = this.db.compileStatement(NEW_USER_QUERY);
         this.currentStmt.bindString(1, username);
         this.currentStmt.bindString(2, password);
+        this.currentStmt.bindLong(3, 0);
         return this.currentStmt.executeInsert();
     }
 
@@ -193,7 +195,7 @@ public class DatabaseHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(username TEXT PRIMARY KEY, password TEXT)");
+            db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(username TEXT PRIMARY KEY, password TEXT, points INTEGER)");
             db.execSQL("CREATE TABLE " + GEOCACHE_TABLE + "(cacheNum INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, points INTEGER, " +
                     "latitude REAL, longitude REAL, cacheName TEXT, description TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, image BLOB)");
             db.execSQL("CREATE TABLE " + ACTION_TABLE + "(username TEXT, action TEXT, cacheNum INTEGER, comment TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
