@@ -13,6 +13,7 @@ public class Geocache {
     private String date;
     private String description;
     private byte[] image;
+    private double distanceFromMe;
 
     public int getCacheNum(){
         return cacheNum;
@@ -46,6 +47,10 @@ public class Geocache {
 
     public byte[] getImage() { return image;}
 
+    public double getDistanceFromMe(){
+        return distanceFromMe;
+    }
+
     public void setUsername(String username){
         this.username = username;
     }
@@ -74,5 +79,9 @@ public class Geocache {
 
     public void setCachenum(int cachNum){
         this.cacheNum = cachNum;
+    }
+
+    public void setDistanceFromMe(double distanceFromMe){
+        this.distanceFromMe = distanceFromMe;
     }
 }

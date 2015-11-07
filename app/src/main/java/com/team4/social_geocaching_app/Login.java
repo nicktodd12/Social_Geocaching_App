@@ -19,7 +19,6 @@ public class Login extends AppCompatActivity implements OnClickListener {
     Button btnCreate;
     private static final String TAG = "LoginActivity";
     private DatabaseHelper dbHelp;
-    GPSTracker gps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

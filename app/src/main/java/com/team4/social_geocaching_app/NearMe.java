@@ -1,32 +1,60 @@
 package com.team4.social_geocaching_app;
 
+import android.location.Location;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class NearMe extends AppCompatActivity {
     ListView connectActivities;
     ArrayList<RowItem> itemsList;
-    List<Action> actionsList;
     List<Geocache> gC;
-    DatabaseHelper dbHelp;
     Intent aboutCacheIntent;
-    Intent viewCacheIntent;
-
+    DatabaseHelper dbHelp;
+    GPSTracker gps;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_near_me);
-        dbHelp = new DatabaseHelper(getApplicationContext());
+        dbHelp = new DatabaseHelper(this);
+        gps = new GPSTracker(this);
         gC = dbHelp.selectGeocaches(0);
+        List<Geocache> nearMe = new ArrayList<>();
+        if(gps.canGetLocation()){
+            Location myLoc = new Location("me");
+            myLoc.setLatitude(gps.getLatitude());
+            myLoc.setLongitude(gps.getLongitude());
+
+            for (Geocache g: gC) {
+                Location geocache = new Location("cache");
+                geocache.setLatitude(g.getLatitude());
+                geocache.setLongitude(g.getLongitude());
+                double distanceFromMe = (myLoc.distanceTo(geocache))*0.000621371;
+                if(distanceFromMe<=25.0){
+                    g.setDistanceFromMe(distanceFromMe);
+                    nearMe.add(g);
+                }
+            }
+
+            Collections.sort(nearMe, new NearMeComp());
+
+            for (Geocache g: nearMe) {
+                Log.d("Near", g.getCacheName() + " " + g.getDistanceFromMe());
+            }
+        }else{
+            gps.showSettingsAlert();
+        }
+
         itemsList = new ArrayList<>();
         aboutCacheIntent = new Intent(this,AboutGeocache.class);
         for(int k=0; k<gC.size(); k++){
@@ -75,5 +103,17 @@ public class NearMe extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+}
+
+class NearMeComp implements Comparator<Geocache> {
+
+    @Override
+    public int compare(Geocache g1, Geocache g2) {
+        if(g1.getDistanceFromMe() > g2.getDistanceFromMe()){
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }
