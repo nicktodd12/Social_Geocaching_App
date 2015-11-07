@@ -21,6 +21,9 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
 
     Bundle b;
     int cN;
+    DatabaseHelper dbHelp;
+    Button checkInButton;
+    TextView TimesFound;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +32,7 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
         b = getIntent().getExtras();
 
         TextView GeocacheTitle = (TextView) findViewById(R.id.geocacheTitle);
-        TextView TimesFound = (TextView) findViewById(R.id.timesFound);
+        TimesFound = (TextView) findViewById(R.id.timesFound);
         TextView Description = (TextView) findViewById(R.id.textDescription);
         TextView Points = (TextView) findViewById(R.id.pointValue);
         TextView CreatedBy = (TextView) findViewById(R.id.createdByTitle);
@@ -50,10 +53,11 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
         }
 
         String created = (String)b.get("User");
-        DatabaseHelper dbHelp = new DatabaseHelper(this);
-        List<Action> currentGCAction = dbHelp.selectActions("",(Integer)b.get("CacheNum"));
-        CreatedBy.append(currentGCAction.get(0).getUsername());
-        Date.setText(currentGCAction.get(0).getDate());
+        dbHelp = new DatabaseHelper(this);
+        //List<Action> currentGCAction = dbHelp.selectActions("",(Integer)b.get("CacheNum"));
+        List<Geocache> gC = dbHelp.selectGeocaches(cN);
+        CreatedBy.append(gC.get(0).getUsername());
+        Date.setText(gC.get(0).getDate());
 
         /*for(int k=0; k<currentGCAction.size(); k++){
             if(pref.getString(Integer.toString(currentGCAction.get(k).getCacheNum()),"OOPS").equals(b.get("Title"))){
@@ -66,12 +70,9 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
 
             }
         }*/
-        int timesFound = (Integer)b.get("TimesFound");
-        if(b.get("TimesFound") != null && timesFound > -1){
-            TimesFound.setText(Integer.toString(timesFound));
-        }
+        TimesFound.setText(Integer.toString(dbHelp.selectActions("",cN).size()-1));
 
-        int pointVal = (Integer)b.get("Points");
+        int pointVal = gC.get(0).getPoints();
         if(b.get("Points") != null && pointVal > 0){
             Points.setText(Integer.toString(pointVal));
         }
@@ -81,7 +82,7 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
 
         ImageButton imageButton = (ImageButton) findViewById(R.id.geocacheImageButton);
         ImageButton mapButton = (ImageButton) findViewById(R.id.mapImage);
-        Button checkInButton = (Button) findViewById(R.id.checkInButton);
+        checkInButton = (Button) findViewById(R.id.checkInButton);
         byte[] image = (byte[]) b.get("Image");
         if(b.get("Image") != null){
             imageButton.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
@@ -90,6 +91,16 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
         mapButton.setOnClickListener(this);
 
         checkInButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        TimesFound.setText(Integer.toString(dbHelp.selectActions("", cN).size() - 1));
+        if(dbHelp.selectActions(getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken"),cN).size()!=0){
+            checkInButton.setText("Can't check in here...");
+            checkInButton.setEnabled(false);
+        }
     }
 
     @Override
