@@ -14,6 +14,8 @@ import java.util.List;
 
 public class GeocacheVisit extends AppCompatActivity implements View.OnClickListener{
 
+    Geocache currentGeocache;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +25,7 @@ public class GeocacheVisit extends AppCompatActivity implements View.OnClickList
         String username = (b.getString("Username"));
         DatabaseHelper dbHelp = new DatabaseHelper(this);
         Action currentAction = dbHelp.selectActions(username, cacheNum).get(0);
-        Geocache currentGeocache = dbHelp.selectGeocaches(cacheNum).get(0);
+        currentGeocache = dbHelp.selectGeocaches(cacheNum).get(0);
         TextView title = (TextView) findViewById(R.id.checkInTitle);
         TextView createdBy = (TextView) findViewById(R.id.createdBy);
         TextView date = (TextView) findViewById(R.id.dateFound);
@@ -75,7 +77,13 @@ public class GeocacheVisit extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mapImage:
-                //go to geocache on map tho
+                Bundle b = new Bundle();
+                b.putString("previousScreen", "AboutGeocache");
+                b.putDouble("latitude", currentGeocache.getLatitude());
+                b.putDouble("longitude", currentGeocache.getLatitude());
+                Intent mapIntent = new Intent(this, Map.class);
+                mapIntent.putExtras(b);
+                startActivity(mapIntent);
                 break;
         }
     }
