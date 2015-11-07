@@ -207,6 +207,24 @@ public class DatabaseHelper {
         return list;
     }
 
+    public List<Account> getAllAccounts() {
+        List<Account> list = new ArrayList<>();
+        String query = "SELECT * FROM Accounts";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Account a = new Account();
+                a.setUsername(cursor.getString(0));
+                a.setPoints(0);
+                list.add(a);
+            } while (cursor.moveToNext());
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+    }
+
     private static class GeocacheOpenHelper extends SQLiteOpenHelper {
         GeocacheOpenHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);

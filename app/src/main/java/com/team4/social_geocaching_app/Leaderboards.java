@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class Leaderboards extends AppCompatActivity implements View.OnClickListener{
-    ListView connectActivities;
     ArrayList<RowItem> itemsList;
     DatabaseHelper dbHelp;
     @Override
@@ -25,44 +24,27 @@ public class Leaderboards extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_leaderboards);
         dbHelp = new DatabaseHelper(this);
         List<Account> results = dbHelp.getLeaderboard();
+        List<Account> allAccounts = dbHelp.getAllAccounts();
         itemsList = new ArrayList<>();
         for(int k = 0; k<results.size(); k++){
             itemsList.add(k, new RowItem(results.get(k).getUsername(), Integer.toString(results.get(k).getPoints())));
         }
+        String currentUser;
+        boolean print;
 
-        DatabaseHelper dbHelp = new DatabaseHelper(getApplicationContext());
-        /*
-        List<Action> actionsList = dbHelp.selectActions("", 0);
-        String username, date, action;
-        List<Geocache> gC;
-        int cacheNum, points;
-        for(int k = 0; k<actionsList.size(); k++){
-            username = actionsList.get(k).getUsername();
-            date = actionsList.get(k).getDate();
-            action = actionsList.get(k).getAction();
-            cacheNum = actionsList.get(k).getCacheNum();
-            gC = dbHelp.selectGeocaches(cacheNum);
-            points = actionsList.get(k).getCacheNum();
-            if (action.equals("created")||action.equals("create")) {
-                itemsList.add(k,new RowItem(username+" created "+gC.get(0).getCacheName(), date));
-            }else{
-                itemsList.add(k,new RowItem(username+" found "+gC.get(0).getCacheName()+" ("+points+" points)",date));
+        for(int k = 0; k<allAccounts.size(); k++){
+            currentUser = allAccounts.get(k).getUsername();
+            print = true;
+            for(int j = 0; j<results.size(); j++){
+                if(currentUser.equals(results.get(j).getUsername())){
+                    print = false;
+                    j=results.size();
+                }
             }
-
-
-        }*/
-        ListAdapter currentAdapter = new ListAdapter(this, itemsList);
-        connectActivities = (ListView) findViewById(R.id.leaderboardList);
-        connectActivities.setAdapter(currentAdapter);
-        connectActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Toast.makeText(getApplicationContext(), itemsList.get(position).activityText+"!"+position, Toast.LENGTH_LONG).show();
+            if(print){
+                itemsList.add(itemsList.size(), new RowItem(currentUser, "0"));
             }
-        });
-
-
-
+        }
     }
 
     @Override
