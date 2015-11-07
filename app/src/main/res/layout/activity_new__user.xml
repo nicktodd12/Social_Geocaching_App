@@ -25,7 +25,7 @@
 
     <EditText
         android:layout_width="340dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:id="@+id/username"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0"
@@ -42,7 +42,7 @@
 
     <EditText
         android:layout_width="340dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:id="@+id/password"
         android:background="@color/white"
         android:phoneNumber="false"

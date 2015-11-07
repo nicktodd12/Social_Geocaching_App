@@ -113,7 +113,6 @@ public class Connect extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.connectList:
-                Toast.makeText(getApplicationContext(), "clicked on list", Toast.LENGTH_LONG).show();
                 break;
         }
     }
