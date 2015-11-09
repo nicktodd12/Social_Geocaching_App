@@ -18,12 +18,14 @@
             android:id="@+id/userImage"
             android:layout_marginLeft="20dp"
             android:padding="0dp"
-            android:minHeight="100dp"
-            android:minWidth="100dp"
+            android:minHeight="154dp"
+            android:minWidth="154dp"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
             android:layout_marginTop="20dp"
-            android:clickable="true"/>
+            android:clickable="true"
+            android:maxWidth="154dp"
+            android:maxHeight="154dp" />
 
         <LinearLayout
             android:orientation="vertical"
