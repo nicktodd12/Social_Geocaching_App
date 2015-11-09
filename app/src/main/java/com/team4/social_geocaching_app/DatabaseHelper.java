@@ -1,5 +1,6 @@
 package com.team4.social_geocaching_app;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,7 +20,7 @@ public class DatabaseHelper {
     private Context context;
     private SQLiteDatabase db;
     private SQLiteStatement currentStmt;
-    private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(username, password) values (?, ?)";
+    private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(username, password, image) values (?, ?, ?)";
     private static final String NEW_GEOCACHE_QUERY = "insert into " + GEOCACHE_TABLE + "(username, points, latitude, longitude, cacheName, description, image) " +
             "values (?, ?, ?, ?, ?, ?, ?)";
     private static final String NEW_ACTION_QUERY = "insert into " + ACTION_TABLE + "(username, action, cacheNum, comment, image) values (?, ?, ?, ?, ?)";
@@ -30,11 +31,11 @@ public class DatabaseHelper {
     }
 
     public void fillAppWithData(){
-        this.insertAccount("A", "aaaaaa");
-        this.insertAccount("B", "bbbbbb");
-        this.insertAccount("C", "cccccc");
-        this.insertAccount("D", "dddddd");
         byte[] pic = new byte[0];
+        this.insertAccount("A", "aaaaaa", pic);
+        this.insertAccount("B", "bbbbbb", pic);
+        this.insertAccount("C", "cccccc", pic);
+        this.insertAccount("D", "dddddd", pic);
         this.insertGeocache("A", 12, 41.40338, 2.17403, "A1", "This is a cache", pic);
         this.insertGeocache("A", 2, 41.40338, 2.17403, "A2", "This is a cache", pic);
         this.insertGeocache("B",4,4.40338,21.17403,"B","This is a cache", pic);
@@ -55,11 +56,19 @@ public class DatabaseHelper {
         this.insertAction("B", "found", 1, "comment3", pic);
     }
 
-    public long insertAccount(String username, String password) {
+    public long insertAccount(String username, String password, byte[] image) {
         this.currentStmt = this.db.compileStatement(NEW_USER_QUERY);
         this.currentStmt.bindString(1, username);
         this.currentStmt.bindString(2, password);
+        this.currentStmt.bindBlob(3, image);
         return this.currentStmt.executeInsert();
+    }
+
+    public int modifyAccountImage(String username, byte[] newImage){
+        ContentValues cv = new ContentValues();
+        String where = "username=?";
+        cv.put("image", newImage);
+        return db.update(ACCOUNT_TABLE, cv, where, new String[]{username});
     }
 
     public long insertGeocache(String username, int points, double latitude, double longitude, String cacheName, String description, byte[] image) {
@@ -217,6 +226,7 @@ public class DatabaseHelper {
                 Account a = new Account();
                 a.setUsername(cursor.getString(0));
                 a.setPoints(0);
+                a.setImage(cursor.getBlob(2));
                 list.add(a);
             } while (cursor.moveToNext());
         }
@@ -226,6 +236,20 @@ public class DatabaseHelper {
         return list;
     }
 
+    public byte[] getAccountImage(String username){
+        String query = "SELECT image FROM Accounts";
+        Cursor cursor = db.query(ACCOUNT_TABLE, new String[]{"image"}, "username=?", new String[]{username}, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                return cursor.getBlob(0);
+            } while (cursor.moveToNext());
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        return null;
+    }
+
     private static class GeocacheOpenHelper extends SQLiteOpenHelper {
         GeocacheOpenHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -233,7 +257,7 @@ public class DatabaseHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(username TEXT PRIMARY KEY, password TEXT)");
+            db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(username TEXT PRIMARY KEY, password TEXT, image BLOB)");
             db.execSQL("CREATE TABLE " + GEOCACHE_TABLE + "(cacheNum INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, points INTEGER, " +
                     "latitude REAL, longitude REAL, cacheName TEXT, description TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, image BLOB)");
             db.execSQL("CREATE TABLE " + ACTION_TABLE + "(username TEXT, action TEXT, cacheNum INTEGER, comment TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, image BLOB," +

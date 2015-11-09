@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,9 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
     Intent aboutCacheIntent;
     Intent viewCacheIntent;
     List<Action> actionsList;
+    List<Account> accountsList;
+    byte[] inputByteStream;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,12 +74,14 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
         userName.setText(username);
 
 
-        if(true){
-            face.setImageResource(R.drawable.defaultface);
-            Toast.makeText(getApplicationContext(), "Upload a profile photo!", Toast.LENGTH_LONG).show();
-        }
 
         this.dbHelp = new DatabaseHelper(this);
+
+        inputByteStream = dbHelp.getAccountImage(username);
+        face.setImageBitmap(BitmapFactory.decodeByteArray(inputByteStream, 0, inputByteStream.length));
+        Toast.makeText(getApplicationContext(), "Upload a profile photo!", Toast.LENGTH_LONG).show();
+
+
         List<Action> results = dbHelp.selectActions(username, 0);
         int point = 0, found = 0, created=0;
         for (Action a : results) {
@@ -140,6 +146,8 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
                 }
             }
         });
+
+
     }
 
     @Override
@@ -203,6 +211,10 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
             if (requestCode == 1) {
                 Bitmap bp = (Bitmap) data.getExtras().get("data");
                 face.setImageBitmap(bp);
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+                inputByteStream = outputStream.toByteArray();
+                dbHelp.modifyAccountImage((String) userName.getText(), inputByteStream);
             } else if (requestCode == 2) {
 
                 Uri selectedImage = data.getData();
@@ -214,6 +226,11 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
                 c.close();
                 Bitmap bp = (BitmapFactory.decodeFile(picturePath));
                 face.setImageBitmap(bp);
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+                inputByteStream = outputStream.toByteArray();
+                dbHelp.modifyAccountImage((String) userName.getText(), inputByteStream);
+
             }
         }
     }

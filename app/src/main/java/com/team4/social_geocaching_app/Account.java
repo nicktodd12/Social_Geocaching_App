@@ -6,6 +6,7 @@ package com.team4.social_geocaching_app;
 public class Account {
     private String username;
     private int points;
+    private byte[] image;
 
     public void setUsername(String username){
         this.username=username;
@@ -15,6 +16,8 @@ public class Account {
         this.points=points;
     }
 
+    public void setImage(byte[] image){ this.image = image;}
+
     public String getUsername(){
         return username;
     }
@@ -22,4 +25,6 @@ public class Account {
     public int getPoints(){
         return points;
     }
+
+    public byte[] getImage() {return image;}
 }

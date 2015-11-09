@@ -1,6 +1,9 @@
 package com.team4.social_geocaching_app;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +13,8 @@ import android.widget.Button;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
 
 public class New_User extends AppCompatActivity implements OnClickListener {
     private Button btnNewUser;
@@ -62,11 +67,19 @@ public class New_User extends AppCompatActivity implements OnClickListener {
         EditText passwordBox = (EditText)findViewById(R.id.password);
         String username = userNameBox.getText().toString();
         String password = passwordBox.getText().toString();
+
+        Drawable drawable = getResources().getDrawable(R.drawable.defaultface);
+        Bitmap bp = ((BitmapDrawable) drawable).getBitmap();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        byte[] imageByteStream = outputStream.toByteArray();
+
+
         this.dbHelp = new DatabaseHelper(this);
 
         if ((!username.equals(""))
                 && (!password.equals(""))&&password.length() > 5 && !this.dbHelp.usernameTaken(username)) {
-            this.dbHelp.insertAccount(username, password);
+            this.dbHelp.insertAccount(username, password, imageByteStream);
             return true;
         }
         else if(this.dbHelp.usernameTaken(username)){
