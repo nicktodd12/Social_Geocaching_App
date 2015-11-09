@@ -92,8 +92,6 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
                     finish();
                 }else if(latitude.getText().toString().length() == 0) {
                     Toast.makeText(getApplicationContext(), "Click the map button!", Toast.LENGTH_LONG).show();
-                }else if(imageByteStream.length == 0 || imageByteStream.equals(null)){
-                    Toast.makeText(getApplicationContext(), "Click the image button!", Toast.LENGTH_LONG).show();
                 }else{
                     Toast.makeText(getApplicationContext(), "Unable to create Geocache!", Toast.LENGTH_LONG).show();
                 }
@@ -145,7 +143,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         }else if(!(points.matches("^-?\\d+$")&&Integer.parseInt(points)>0 && Integer.parseInt(points)<21)){
             Toast.makeText(getApplicationContext(), "Enter a positive int value for points between 1 and 20!", Toast.LENGTH_LONG).show();
             return false;
-        }else if(imageInBytes.length == 0 || imageInBytes.equals(null)){
+        }else if(imageInBytes == null){
             Toast.makeText(getApplicationContext(), "Include an image for your Geocache!", Toast.LENGTH_LONG).show();
             return false;
         }

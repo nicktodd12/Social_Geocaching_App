@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MyAccount extends AppCompatActivity implements View.OnClickListener{
@@ -79,8 +82,15 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
 
         inputByteStream = dbHelp.getAccountImage(username);
         face.setImageBitmap(BitmapFactory.decodeByteArray(inputByteStream, 0, inputByteStream.length));
-        Toast.makeText(getApplicationContext(), "Upload a profile photo!", Toast.LENGTH_LONG).show();
 
+        Drawable drawable = getResources().getDrawable(R.drawable.defaultface);
+        Bitmap bp = ((BitmapDrawable) drawable).getBitmap();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        byte[] imageByteStream = outputStream.toByteArray();
+        if(Arrays.equals(inputByteStream, imageByteStream)) {
+            Toast.makeText(getApplicationContext(), "Upload a profile photo!", Toast.LENGTH_LONG).show();
+        }
 
         List<Action> results = dbHelp.selectActions(username, 0);
         int point = 0, found = 0, created=0;
