@@ -26,6 +26,7 @@ public class GeocacheVisit extends AppCompatActivity implements View.OnClickList
         DatabaseHelper dbHelp = new DatabaseHelper(this);
         Action currentAction = dbHelp.selectActions(username, cacheNum).get(0);
         currentGeocache = dbHelp.selectGeocaches(cacheNum).get(0);
+
         TextView title = (TextView) findViewById(R.id.checkInTitle);
         TextView createdBy = (TextView) findViewById(R.id.createdBy);
         TextView date = (TextView) findViewById(R.id.dateFound);
@@ -44,10 +45,11 @@ public class GeocacheVisit extends AppCompatActivity implements View.OnClickList
         date.append(currentAction.getDate());
         points.append(Integer.toString(currentGeocache.getPoints()));
         comment.setText(currentAction.getComment());
-        ImageButton cacheImage = (ImageButton) findViewById(R.id.geocacheImage);
+
+        ImageButton cacheImage = (ImageButton) findViewById(R.id.geocacheVisitImage);
         //TODO: replace with image from action
-        byte[] image = currentGeocache.getImage();
-        if(image != null){
+        byte[] image = currentAction.getImage();
+        if(image != null && image.length != 0){
             cacheImage.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
         }
     }

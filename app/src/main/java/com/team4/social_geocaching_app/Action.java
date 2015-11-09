@@ -10,6 +10,7 @@ public class Action {
     private String date;
     private int points;
     private String comment;
+    private byte[] image;
 
     public void setUsername(String username){
         this.username = username;
@@ -35,6 +36,8 @@ public class Action {
         this.comment = comment;
     }
 
+    public void setImage(byte[] image) { this.image = image; }
+
     public String getUsername(){
         return username;
     }
@@ -58,4 +61,6 @@ public class Action {
     public String getComment(){
         return comment;
     }
+
+    public byte[] getImage() { return image;}
 }

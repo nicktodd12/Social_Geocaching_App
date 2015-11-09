@@ -22,7 +22,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/geocacheImage"
+            android:id="@+id/geocacheVisitImage"
             android:minWidth="125dp"
             android:minHeight="125dp"
             android:paddingLeft="20dp"

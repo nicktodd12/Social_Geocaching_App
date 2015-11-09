@@ -22,8 +22,7 @@ public class DatabaseHelper {
     private static final String NEW_USER_QUERY = "insert into " + ACCOUNT_TABLE + "(username, password) values (?, ?)";
     private static final String NEW_GEOCACHE_QUERY = "insert into " + GEOCACHE_TABLE + "(username, points, latitude, longitude, cacheName, description, image) " +
             "values (?, ?, ?, ?, ?, ?, ?)";
-    private static final String NEW_ACTION_QUERY = "insert into " + ACTION_TABLE + "(username, action, cacheNum, comment) values (?, ?, ?, ?)";
-
+    private static final String NEW_ACTION_QUERY = "insert into " + ACTION_TABLE + "(username, action, cacheNum, comment, image) values (?, ?, ?, ?, ?)";
     public DatabaseHelper(Context context) {
         this.context = context;
         GeocacheOpenHelper openHelper = new GeocacheOpenHelper(this.context);
@@ -43,17 +42,17 @@ public class DatabaseHelper {
         this.insertGeocache("C", 1, 4.0338, 2.7403, "C2", "This is a cache", pic);
         this.insertGeocache("C", 2, 23.338, 23.34, "C3", "This is a cache", pic);
         this.insertGeocache("D", 1, 1.4238, 5.67, "D", "This is a cache", pic);
-        this.insertAction("A", "created", 1, "comment");
-        this.insertAction("A", "created", 2, "comment2");
-        this.insertAction("B", "created", 3, "comment3");
-        this.insertAction("C", "created", 4, "comment4");
-        this.insertAction("C", "created", 5, "comment");
-        this.insertAction("C", "created", 6, "comment2");
-        this.insertAction("D", "created", 7, "comment3");
-        this.insertAction("D", "found", 1, "comment3");
-        this.insertAction("D", "found", 3, "comment3");
-        this.insertAction("A", "found", 5, "comment3");
-        this.insertAction("B", "found", 1, "comment3");
+        this.insertAction("A", "created", 1, "comment", pic);
+        this.insertAction("A", "created", 2, "comment2", pic);
+        this.insertAction("B", "created", 3, "comment3", pic);
+        this.insertAction("C", "created", 4, "comment4", pic);
+        this.insertAction("C", "created", 5, "comment", pic);
+        this.insertAction("C", "created", 6, "comment2", pic);
+        this.insertAction("D", "created", 7, "comment3", pic);
+        this.insertAction("D", "found", 1, "comment3", pic);
+        this.insertAction("D", "found", 3, "comment3", pic);
+        this.insertAction("A", "found", 5, "comment3", pic);
+        this.insertAction("B", "found", 1, "comment3", pic);
     }
 
     public long insertAccount(String username, String password) {
@@ -75,12 +74,13 @@ public class DatabaseHelper {
         return this.currentStmt.executeInsert();
     }
 
-    public long insertAction(String username, String action, int cacheNum, String comment) {
+    public long insertAction(String username, String action, int cacheNum, String comment, byte[] image) {
         this.currentStmt = this.db.compileStatement(NEW_ACTION_QUERY);
         this.currentStmt.bindString(1, username);
         this.currentStmt.bindString(2, action);
         this.currentStmt.bindLong(3, cacheNum);
         this.currentStmt.bindString(4, comment);
+        this.currentStmt.bindBlob(5, image);
         return this.currentStmt.executeInsert();
     }
 
@@ -175,9 +175,10 @@ public class DatabaseHelper {
                 a.setUsername(cursor.getString(0));
                 a.setAction(cursor.getString(1));
                 a.setCacheNum(Integer.parseInt(cursor.getString(2)));
-                a.setComment(cursor.getColumnName(3));
+                a.setComment(cursor.getString(3));
                 a.setDate(cursor.getString(4));
-                a.setPoints(Integer.parseInt(cursor.getString(7)));
+                a.setPoints(Integer.parseInt(cursor.getString(8))); //Changed this to 8
+                a.setImage(cursor.getBlob(5));
                 list.add(a);
             } while (cursor.moveToNext());
         }
@@ -235,7 +236,7 @@ public class DatabaseHelper {
             db.execSQL("CREATE TABLE " + ACCOUNT_TABLE + "(username TEXT PRIMARY KEY, password TEXT)");
             db.execSQL("CREATE TABLE " + GEOCACHE_TABLE + "(cacheNum INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, points INTEGER, " +
                     "latitude REAL, longitude REAL, cacheName TEXT, description TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, image BLOB)");
-            db.execSQL("CREATE TABLE " + ACTION_TABLE + "(username TEXT, action TEXT, cacheNum INTEGER, comment TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+            db.execSQL("CREATE TABLE " + ACTION_TABLE + "(username TEXT, action TEXT, cacheNum INTEGER, comment TEXT, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, image BLOB," +
                     "PRIMARY KEY(username, action, cacheNUM))");
         }
 

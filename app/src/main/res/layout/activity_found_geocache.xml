@@ -20,15 +20,16 @@
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/geocacheImage"
+            android:layout_width="154dp"
+            android:layout_height="154dp"
+            android:id="@+id/geocacheFoundImage"
             android:minWidth="125dp"
             android:minHeight="125dp"
             android:paddingLeft="20dp"
             android:padding="20dp"
             android:layout_marginLeft="20dp"
-            android:clickable="true" />
+            android:clickable="true"
+            />
 
         <LinearLayout
             android:orientation="vertical"

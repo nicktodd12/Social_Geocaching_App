@@ -90,8 +90,10 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
                 if(latitude.getText().toString().length() > 0 && createNewGeocache(titleBox.getText().toString(), points.getText().toString(), latitude.getText().toString(),longitude.getText().toString(),description.getText().toString(), imageByteStream)){
                     Toast.makeText(getApplicationContext(), "Geocache " + titleBox.getText().toString() + " created!", Toast.LENGTH_LONG).show();
                     finish();
-                }else if(latitude.getText().toString().length() == 0){
+                }else if(latitude.getText().toString().length() == 0) {
                     Toast.makeText(getApplicationContext(), "Click the map button!", Toast.LENGTH_LONG).show();
+                }else if(imageByteStream.length == 0 || imageByteStream.equals(null)){
+                    Toast.makeText(getApplicationContext(), "Click the image button!", Toast.LENGTH_LONG).show();
                 }else{
                     Toast.makeText(getApplicationContext(), "Unable to create Geocache!", Toast.LENGTH_LONG).show();
                 }
@@ -143,11 +145,14 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         }else if(!(points.matches("^-?\\d+$")&&Integer.parseInt(points)>0 && Integer.parseInt(points)<21)){
             Toast.makeText(getApplicationContext(), "Enter a positive int value for points between 1 and 20!", Toast.LENGTH_LONG).show();
             return false;
+        }else if(imageInBytes.length == 0 || imageInBytes.equals(null)){
+            Toast.makeText(getApplicationContext(), "Include an image for your Geocache!", Toast.LENGTH_LONG).show();
+            return false;
         }
         dbHelp.insertGeocache(currentUsername, Integer.parseInt(points), Double.parseDouble(latitude), Double.parseDouble(longitude), title, description, imageInBytes);
         List<Geocache> results = dbHelp.selectGeocaches(0);
         int cacheNum = results.get(0).getCacheNum();
-        dbHelp.insertAction(currentUsername, "created", cacheNum, "");
+        dbHelp.insertAction(currentUsername, "created", cacheNum, "", new byte[0]);
         SharedPreferences pref = getApplicationContext().getSharedPreferences("CacheList", 0);
         pref.edit().putString(Integer.toString(cacheNum), title).apply();
         return true;
