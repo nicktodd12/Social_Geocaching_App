@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -83,14 +84,14 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
         inputByteStream = dbHelp.getAccountImage(username);
         face.setImageBitmap(BitmapFactory.decodeByteArray(inputByteStream, 0, inputByteStream.length));
 
-        Drawable drawable = getResources().getDrawable(R.drawable.defaultface);
-        Bitmap bp = ((BitmapDrawable) drawable).getBitmap();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
-        byte[] imageByteStream = outputStream.toByteArray();
-        if(Arrays.equals(inputByteStream, imageByteStream)) {
-            Toast.makeText(getApplicationContext(), "Upload a profile photo!", Toast.LENGTH_LONG).show();
-        }
+//        Drawable drawable = getResources().getDrawable(R.drawable.defaultface);
+//        Bitmap bp = ((BitmapDrawable) drawable).getBitmap();
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+//        byte[] imageByteStream = outputStream.toByteArray();
+//        if(Arrays.equals(inputByteStream, imageByteStream)) {
+//            Toast.makeText(getApplicationContext(), "Upload a profile photo!", Toast.LENGTH_LONG).show();
+//        }
 
         List<Action> results = dbHelp.selectActions(username, 0);
         int point = 0, found = 0, created=0;
@@ -220,6 +221,7 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
                 Bitmap bp = (Bitmap) data.getExtras().get("data");
+                bp = resizeImage(bp, face.getWidth(), face.getHeight());
                 face.setImageBitmap(bp);
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
@@ -235,6 +237,7 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
                 String picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap bp = (BitmapFactory.decodeFile(picturePath));
+                bp = resizeImage(bp, face.getWidth(), face.getHeight());
                 face.setImageBitmap(bp);
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
@@ -243,6 +246,19 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
 
             }
         }
+    }
+
+    public Bitmap resizeImage(Bitmap bp, float targetWidth, float targetHeight){
+        float width = bp.getWidth();
+        float height = bp.getHeight();
+        if(width > targetWidth || height > targetHeight){
+            Matrix matrix = new Matrix();
+            float scaleWidth = ( targetWidth/width );
+            float scaleHeight = ( targetWidth/width );
+            matrix.postScale(scaleWidth, scaleHeight);
+            bp = Bitmap.createBitmap(bp, 0, 0, (int)width, (int)height, matrix, true);
+        }
+        return bp;
     }
 
 

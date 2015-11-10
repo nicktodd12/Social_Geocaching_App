@@ -125,6 +125,7 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_REQUEST) {
                 Bitmap bp = (Bitmap) data.getExtras().get("data");
+                bp = resizeImage(bp, findViewById(R.id.geocacheFoundImage).getWidth(), findViewById(R.id.geocacheFoundImage).getHeight());
                 foundImage.setImageBitmap(bp);
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
@@ -156,7 +157,7 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
     public Bitmap resizeImage(Bitmap bp, float targetWidth, float targetHeight){
         float width = bp.getWidth();
         float height = bp.getHeight();
-        if(width > targetWidth && height > targetHeight){
+        if(width > targetWidth || height > targetHeight){
             Matrix matrix = new Matrix();
             float scaleWidth = ( targetWidth/width );
             float scaleHeight = ( targetWidth/width );

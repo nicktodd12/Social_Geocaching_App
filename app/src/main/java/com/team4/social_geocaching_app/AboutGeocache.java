@@ -99,7 +99,7 @@ public class AboutGeocache extends AppCompatActivity implements View.OnClickList
     @Override
     public void onResume(){
         super.onResume();
-        TimesFound.setText(Integer.toString(dbHelp.selectActions("", cN).size() - 2));
+        TimesFound.setText(Integer.toString(dbHelp.selectActions("", cN).size() - 1));
         if(dbHelp.selectActions(getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken"),cN).size()!=0){
             checkInButton.setText("Can't check in here...");
             checkInButton.setEnabled(false);

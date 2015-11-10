@@ -3,6 +3,7 @@ package com.team4.social_geocaching_app;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -125,6 +126,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         }
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             Bitmap bp = (Bitmap) data.getExtras().get("data");
+            bp = resizeImage(bp, findViewById(R.id.geocacheImage).getWidth(), findViewById(R.id.geocacheImage).getHeight());
             geocacheImage.setImageBitmap(bp);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
@@ -154,5 +156,20 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         SharedPreferences pref = getApplicationContext().getSharedPreferences("CacheList", 0);
         pref.edit().putString(Integer.toString(cacheNum), title).apply();
         return true;
+    }
+
+
+
+    public Bitmap resizeImage(Bitmap bp, float targetWidth, float targetHeight){
+        float width = bp.getWidth();
+        float height = bp.getHeight();
+        if(width > targetWidth || height > targetHeight){
+            Matrix matrix = new Matrix();
+            float scaleWidth = ( targetWidth/width );
+            float scaleHeight = ( targetWidth/width );
+            matrix.postScale(scaleWidth, scaleHeight);
+            bp = Bitmap.createBitmap(bp, 0, 0, (int)width, (int)height, matrix, true);
+        }
+        return bp;
     }
 }
