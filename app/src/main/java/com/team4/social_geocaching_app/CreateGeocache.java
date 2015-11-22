@@ -34,7 +34,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
     private DatabaseHelper dbHelp;
     private String currentUsername;
     private ImageView mImageView;
-    private Bitmap mImageBitmap;
+    private Bitmap bp;
     private byte[] imageByteStream;
     private int CAMERA_REQUEST = 1;
     @Override
@@ -133,6 +133,42 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
             imageByteStream = outputStream.toByteArray();
 //TODO: modify database to contain this bytestream
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+        outState.putString("SavedLat", latitude.getText().toString());
+        outState.putString("SavedLong", longitude.getText().toString());
+        outState.putParcelable("image", bp);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle outState){
+        String latString = "";
+        String longString = "";
+        if(outState.get("SavedLat") != null) {
+            latString = outState.getString("SavedLat");
+            longString = outState.getString("SavedLong");
+        }
+
+        if(latString.length()>0){
+            latitude.setText(latString);
+            longitude.setText(longString);
+        }
+
+        bp = (Bitmap)outState.get("image");
+        if(bp!=null){
+            setImage();
+        }
+        super.onRestoreInstanceState(outState);
+    }
+
+    public void setImage(){
+        geocacheImage.setImageBitmap(bp);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        imageByteStream = outputStream.toByteArray();
     }
 
     public boolean createNewGeocache(String title, String points, String latitude, String longitude, String description, byte[] imageInBytes){
