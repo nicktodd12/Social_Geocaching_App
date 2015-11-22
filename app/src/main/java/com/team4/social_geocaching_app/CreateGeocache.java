@@ -34,7 +34,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
     private DatabaseHelper dbHelp;
     private String currentUsername;
     private ImageView mImageView;
-    private Bitmap bp;
+    private Bitmap savedBp;
     private byte[] imageByteStream;
     private int CAMERA_REQUEST = 1;
     @Override
@@ -126,12 +126,12 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         }
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             Bitmap bp = (Bitmap) data.getExtras().get("data");
-            bp = resizeImage(bp, findViewById(R.id.geocacheImage).getWidth(), findViewById(R.id.geocacheImage).getHeight());
+            //bp = resizeImage(bp, findViewById(R.id.geocacheImage).getWidth(), findViewById(R.id.geocacheImage).getHeight());
             geocacheImage.setImageBitmap(bp);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
             imageByteStream = outputStream.toByteArray();
-//TODO: modify database to contain this bytestream
+            setImage(bp);
         }
     }
 
@@ -139,7 +139,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
     protected void onSaveInstanceState(Bundle outState){
         outState.putString("SavedLat", latitude.getText().toString());
         outState.putString("SavedLong", longitude.getText().toString());
-        outState.putParcelable("image", bp);
+        outState.putParcelable("image", savedBp);
         super.onSaveInstanceState(outState);
     }
 
@@ -157,14 +157,15 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
             longitude.setText(longString);
         }
 
-        bp = (Bitmap)outState.get("image");
-        if(bp!=null){
-            setImage();
+        savedBp = (Bitmap)outState.get("image");
+        if(savedBp!=null){
+            setImage(savedBp);
         }
         super.onRestoreInstanceState(outState);
     }
 
-    public void setImage(){
+    public void setImage(Bitmap bp){
+        savedBp = bp;
         geocacheImage.setImageBitmap(bp);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
@@ -193,8 +194,6 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         pref.edit().putString(Integer.toString(cacheNum), title).apply();
         return true;
     }
-
-
 
     public Bitmap resizeImage(Bitmap bp, float targetWidth, float targetHeight){
         float width = bp.getWidth();

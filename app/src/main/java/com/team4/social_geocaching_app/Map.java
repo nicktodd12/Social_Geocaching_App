@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Map extends FragmentActivity implements GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener{
@@ -21,6 +22,7 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
     private String previousScreen;
     GPSTracker gps;
     double latitude, longitude;
+    ArrayList<LatLng> latlngs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,26 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
         super.onResume();
         setUpMapIfNeeded();
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        if (latlngs.size() > 0){
+            savedInstanceState.putParcelableArrayList("latlngs", latlngs);
+        }
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState){
+        if(savedInstanceState.get("latlngs") != null){
+            latlngs = savedInstanceState.getParcelableArrayList("latlngs");
+            for(LatLng l : latlngs){
+                mMap.addMarker(new MarkerOptions().position(l).title("Create a Geocache Here"));
+            }
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
 
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
@@ -145,7 +167,7 @@ public class Map extends FragmentActivity implements GoogleMap.OnMapClickListene
     public void onMapLongClick(LatLng latLng) {
         if(previousScreen.equals("CreateGeocache")){
             mMap.addMarker(new MarkerOptions().position(latLng).title("Create a Geocache Here"));
-
+            latlngs.add(latLng);
         }
     }
 

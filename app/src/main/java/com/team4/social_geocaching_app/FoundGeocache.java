@@ -33,7 +33,7 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
     int cacheNum;
     Geocache geocache;
     ImageButton foundImage;
-    Bitmap bp;
+    Bitmap savedBp;
     private int CAMERA_REQUEST = 1;
     private int GALLERY_REQUEST = 2;
     private byte[] imageByteStream;
@@ -83,17 +83,17 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
-        if(bp != null) {
-            savedInstanceState.putParcelable("image", bp);
+        if(savedBp != null) {
+            savedInstanceState.putParcelable("image", savedBp);
         }
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        bp = (Bitmap)savedInstanceState.get("image");
-        if(bp != null){
-            setImage();
+        savedBp = (Bitmap)savedInstanceState.get("image");
+        if(savedBp != null){
+            setImage(savedBp);
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
@@ -142,9 +142,9 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_REQUEST) {
-                bp = (Bitmap) data.getExtras().get("data");
-                bp = resizeImage(bp, findViewById(R.id.geocacheFoundImage).getWidth(), findViewById(R.id.geocacheFoundImage).getHeight());
-                setImage();
+                Bitmap bp = (Bitmap) data.getExtras().get("data");
+                //bp = resizeImage(bp, findViewById(R.id.geocacheFoundImage).getWidth(), findViewById(R.id.geocacheFoundImage).getHeight());
+                setImage(bp);
             } else if (requestCode == GALLERY_REQUEST) {
 
                 Uri selectedImage = data.getData();
@@ -154,15 +154,16 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 String picturePath = c.getString(columnIndex);
                 c.close();
-                bp = (BitmapFactory.decodeFile(picturePath));
+                Bitmap bp = (BitmapFactory.decodeFile(picturePath));
 
                 bp = resizeImage(bp, findViewById(R.id.geocacheFoundImage).getWidth(), findViewById(R.id.geocacheFoundImage).getHeight());
-                setImage();
+                setImage(bp);
             }
         }
     }
 
-    public void setImage(){
+    public void setImage(Bitmap bp){
+        savedBp = bp;
         foundImage.setImageBitmap(bp);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
