@@ -56,7 +56,7 @@ public class CreateGeocache extends AppCompatActivity implements OnClickListener
         longitude = (TextView)findViewById(R.id.editLongitude);
     }
 
-    @Override
+        @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_new__user, menu);
