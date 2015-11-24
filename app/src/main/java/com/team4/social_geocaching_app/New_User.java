@@ -78,7 +78,7 @@ public class New_User extends AppCompatActivity implements OnClickListener {
         this.dbHelp = new DatabaseHelper(this);
 
         if ((!username.equals(""))
-                && (!password.equals(""))&&password.length() > 5 && !this.dbHelp.usernameTaken(username)) {
+                && (!password.equals(""))&&password.length() > 5 && password.matches("[A-Za-z0-9]")&&password.matches(".*[0-9].*")&&!password.equals(password.toLowerCase())&&!password.equals(password.toUpperCase())&&!this.dbHelp.usernameTaken(username)) {
             this.dbHelp.insertAccount(username, password, imageByteStream);
             return true;
         }
@@ -87,6 +87,14 @@ public class New_User extends AppCompatActivity implements OnClickListener {
         }
         else if(password.length() < 6){
             Toast.makeText(getApplicationContext(), "Password must be at least 6 characters!", Toast.LENGTH_LONG).show();
+        }else if(!password.matches("[A-Za-z0-9]")){
+            Toast.makeText(getApplicationContext(), "Password must contain only numbers and letters!", Toast.LENGTH_LONG).show();
+        }else if(!password.matches(".*[0-9].*")){
+            Toast.makeText(getApplicationContext(), "Password must contain at least one number!", Toast.LENGTH_LONG).show();
+        }else if(password.equals(password.toLowerCase())){
+            Toast.makeText(getApplicationContext(), "Password must contain at least one uppercase character!", Toast.LENGTH_LONG).show();
+        }else if(password.equals(password.toUpperCase())){
+            Toast.makeText(getApplicationContext(), "Password must contain at least one lowercase character!", Toast.LENGTH_LONG).show();
         }
         return false;
     }
