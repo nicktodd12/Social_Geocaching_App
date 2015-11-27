@@ -12,21 +12,29 @@ import android.widget.TextView;
 
 import java.util.List;
 
+/**
+ * Class which creates and controls functionality of the Geocache Visit page
+ */
 public class GeocacheVisit extends AppCompatActivity implements View.OnClickListener{
 
+    //The geocache and activity information being viewed on the screen
     Geocache currentGeocache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //create the display
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geocache_visit);
+        //get the passed bundle from the intent
         Bundle b = getIntent().getExtras();
         int cacheNum = (b.getInt("CacheNum"));
         String username = (b.getString("Username"));
+        //create a database helper and run a query to get the database/action information
         DatabaseHelper dbHelp = new DatabaseHelper(this);
         Action currentAction = dbHelp.selectActions(username, cacheNum).get(0);
         currentGeocache = dbHelp.selectGeocaches(cacheNum).get(0);
 
+        //find all textviews to set correct values from queries
         TextView title = (TextView) findViewById(R.id.checkInTitle);
         TextView createdBy = (TextView) findViewById(R.id.createdBy);
         TextView date = (TextView) findViewById(R.id.dateFound);
@@ -34,10 +42,12 @@ public class GeocacheVisit extends AppCompatActivity implements View.OnClickList
         TextView comment = (TextView) findViewById(R.id.commentBox);
         TextView latitude = (TextView) findViewById(R.id.editLatitude);
         TextView longitude = (TextView) findViewById(R.id.editLongitude);
+        //set text values
         title.setText(currentGeocache.getCacheName());
         latitude.setText(Double.toString(currentGeocache.getLatitude()));
         longitude.setText(Double.toString(currentGeocache.getLongitude()));
         ImageButton mapButton = (ImageButton) findViewById(R.id.mapImage);
+        //set a listener to the google maps button
         mapButton.setOnClickListener(this);
         if(username != null){
             createdBy.append(username);
@@ -46,8 +56,8 @@ public class GeocacheVisit extends AppCompatActivity implements View.OnClickList
         points.append(Integer.toString(currentGeocache.getPoints()));
         comment.setText(currentAction.getComment());
 
+        //place the image for the action on the screen
         ImageButton cacheImage = (ImageButton) findViewById(R.id.geocacheVisitImage);
-        //TODO: replace with image from action
         byte[] image = currentAction.getImage();
         if(image != null && image.length != 0){
             cacheImage.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
@@ -79,10 +89,13 @@ public class GeocacheVisit extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mapImage:
+                //if the user clicks the map icon
+                //create a bundle with the cache title and location
                 Bundle b = new Bundle();
                 b.putString("previousScreen", "AboutGeocache");
                 b.putDouble("latitude", currentGeocache.getLatitude());
                 b.putDouble("longitude", currentGeocache.getLatitude());
+                //start the map activity
                 Intent mapIntent = new Intent(this, Map.class);
                 mapIntent.putExtras(b);
                 startActivity(mapIntent);

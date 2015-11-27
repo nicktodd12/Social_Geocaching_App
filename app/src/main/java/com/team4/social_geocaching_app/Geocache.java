@@ -2,8 +2,14 @@ package com.team4.social_geocaching_app;
 
 /**
  * Created by Nick on 11/4/2015.
+ * Class which represents a geocache in the database
  */
 public class Geocache {
+    /*
+     * contains a cache number, an owner, a point value for finding it, a latitude and longitude,
+     * a name, a data of creation, a description of the cache, an image, and a distance from the user
+     */
+
     private int cacheNum;
     private String username;
     private int points;
@@ -14,6 +20,8 @@ public class Geocache {
     private String description;
     private byte[] image;
     private double distanceFromMe;
+
+    //getters and setters for all of the class variables
 
     public int getCacheNum(){
         return cacheNum;
@@ -49,7 +57,6 @@ public class Geocache {
 
     public double getDistanceFromMe(){
         return (double)Math.round(distanceFromMe * 100d) / 100d;
-        //return Math.round(distanceFromMe, 2);
     }
 
     public void setUsername(String username){

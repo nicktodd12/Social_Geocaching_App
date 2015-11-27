@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Connect extends AppCompatActivity implements View.OnClickListener {
+    //Variables used throughout the activity
     ListView connectActivities;
     ArrayList<RowItem> itemsList;
     List<Action> actionsList;
@@ -28,17 +29,21 @@ public class Connect extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set the view and initialize variables
         setContentView(R.layout.activity_connect);
         itemsList = new ArrayList<>();
         dbHelp = new DatabaseHelper(getApplicationContext());
         //dbHelp.fillAppWithData();
+        //get all most recent database actions
         actionsList = dbHelp.selectActions("", 0);
         aboutCacheIntent = new Intent(this,AboutGeocache.class);
         viewCacheIntent = new Intent(this,GeocacheVisit.class);
 
+        //create local variables used in dynamic list
         String username, date, action;
-
         int cacheNum, points;
+
+        //create a list of rowitems to dynamically display all recent actions performed
         for(int k = 0; k<actionsList.size(); k++){
             username = actionsList.get(k).getUsername();
             date = actionsList.get(k).getDate();
@@ -54,19 +59,22 @@ public class Connect extends AppCompatActivity implements View.OnClickListener {
 
 
         }
+        //create a list adapter to display the information on the screen
         ListAdapter currentAdapter = new ListAdapter(this, itemsList);
         connectActivities = (ListView) findViewById(R.id.connectList);
         connectActivities.setAdapter(currentAdapter);
+        //set listeners for each item in the list to redirect to that cache's about page
         connectActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Bundle b = new Bundle();
                 gC = dbHelp.selectGeocaches(actionsList.get(position).getCacheNum());
+                //put appropriate info in the bundle and start the correct intent
                 if(actionsList.get(position).getAction().equals("created")||actionsList.get(position).getAction().equals("created"))
                 {
+                    //if the cache has been created then view the about cache page
                     b.putString("Title", gC.get(0).getCacheName());
                     b.putInt("CacheNum", gC.get(0).getCacheNum());
-                    //TODO: make TimesFound actually do times found??
                     b.putInt("TimesFound", gC.get(0).getPoints());
                     b.putString("Description", gC.get(0).getDescription());
                     b.putDouble("Latitude", gC.get(0).getLatitude());
@@ -76,6 +84,7 @@ public class Connect extends AppCompatActivity implements View.OnClickListener {
                     aboutCacheIntent.putExtras(b);
                     startActivity(aboutCacheIntent);
                 }else{
+                    //if the cache has been visited then vist the cache visit page
                     b.putInt("CacheNum", gC.get(0).getCacheNum());
                     b.putString("Username", actionsList.get(position).getUsername());
                     viewCacheIntent.putExtras(b);

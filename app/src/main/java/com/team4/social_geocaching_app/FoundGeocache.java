@@ -25,8 +25,12 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+/**
+ * Class which creates and handles functionality on the found geocache page
+ */
 public class FoundGeocache extends AppCompatActivity implements View.OnClickListener {
 
+    //variables used throughout the class
     EditText comments;
     Button submit;
     DatabaseHelper dbHelp;
@@ -40,6 +44,7 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //set the layout and initialize variables
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_found_geocache);
         submit = (Button) findViewById(R.id.submitCheckIn);
@@ -49,12 +54,13 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
         Bundle b = getIntent().getExtras();
         cacheNum = (b.getInt("CacheNum"));
         dbHelp = new DatabaseHelper(this);
+        //run a query to retrieve the info on the geocache
         geocache =  dbHelp.selectGeocaches(cacheNum).get(0);
-        //List<Action> actionList = dbHelp.selectActions(geocache.getUsername(), cacheNum);
         TextView title = (TextView) findViewById(R.id.checkInTitle);
         TextView creator = (TextView) findViewById(R.id.createdBy);
         TextView points = (TextView) findViewById(R.id.GeocachePoints);
         comments = (EditText) findViewById(R.id.commentBox);
+        //populate the info for the geocache
         title.append(" "+geocache.getCacheName());
         creator.append(" "+geocache.getUsername());
         points.append(" "+geocache.getPoints());
@@ -83,6 +89,7 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
+        //save the image when the screen is rotated if one was taken
         if(savedBp != null) {
             savedInstanceState.putParcelable("image", savedBp);
         }
@@ -91,6 +98,7 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+        //get the image from the saved state and display it
         savedBp = (Bitmap)savedInstanceState.get("image");
         if(savedBp != null){
             setImage(savedBp);
@@ -101,32 +109,39 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.submitCheckIn:
+                //if the user clicks the check in button then insert  new action into the database
                 String comment = comments.getText().toString();
                 String username = getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken");
                 dbHelp.insertAction(username, "found", cacheNum, comment, imageByteStream);
                 Toast.makeText(getApplicationContext(), "Cache " + geocache.getCacheName() + " Found!", Toast.LENGTH_LONG).show();
+                //finish the activity
                 finish();
                 break;
             case R.id.geocacheFoundImage:
+                //if the user clicks the image button create options to choose
                 final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(FoundGeocache.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(options, new DialogInterface.OnClickListener() {
+                    //set a listener inside the options list
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         if (options[item].equals("Take Photo"))
                         {
+                            //if the user chooses to take a photo then start the camera and wait for a result
                             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                             startActivityForResult(cameraIntent, CAMERA_REQUEST);
                         }
                         else if (options[item].equals("Choose from Gallery"))
                         {
+                            //if the user chooses the gallery then start the gallery and wait for a result
                             Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(intent, GALLERY_REQUEST);
 
                         }
                         else if (options[item].equals("Cancel")) {
+                            //remove the dialog if the user cancels
                             dialog.dismiss();
                         }
                     }
@@ -142,11 +157,12 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_REQUEST) {
+                //if the user took a picture then retrieve and set the picture button to the image
                 Bitmap bp = (Bitmap) data.getExtras().get("data");
                 //bp = resizeImage(bp, findViewById(R.id.geocacheFoundImage).getWidth(), findViewById(R.id.geocacheFoundImage).getHeight());
                 setImage(bp);
             } else if (requestCode == GALLERY_REQUEST) {
-
+                //if the user selected then retrieve and set the picture button to the image
                 Uri selectedImage = data.getData();
                 String[] filePath = { MediaStore.Images.Media.DATA };
                 Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
@@ -162,6 +178,7 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    //Sets the bitmap image to the image button on the screen
     public void setImage(Bitmap bp){
         savedBp = bp;
         foundImage.setImageBitmap(bp);
@@ -170,6 +187,7 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
         imageByteStream = outputStream.toByteArray();
     }
 
+    //Resizes a selected image to appear inside of the image button
     public Bitmap resizeImage(Bitmap bp, float targetWidth, float targetHeight){
         float width = bp.getWidth();
         float height = bp.getHeight();

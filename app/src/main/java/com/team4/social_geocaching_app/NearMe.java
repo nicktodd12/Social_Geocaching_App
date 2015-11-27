@@ -15,7 +15,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Class which creates and implements the functionality of the Near Me page
+ */
 public class NearMe extends AppCompatActivity {
+    //variables used throughout the activity
     ListView connectActivities;
     ArrayList<RowItem> itemsList;
     List<Geocache> gC;
@@ -25,17 +29,22 @@ public class NearMe extends AppCompatActivity {
     List<Geocache> nearMe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //set up the view
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_near_me);
+        //initialize the database helper and gps tracker
         dbHelp = new DatabaseHelper(this);
         gps = new GPSTracker(this);
+        //get all of the geocaches
         gC = dbHelp.selectGeocaches(0);
         nearMe = new ArrayList<>();
+        //try to get the user's location
         if(gps.canGetLocation()){
             Location myLoc = new Location("me");
             myLoc.setLatitude(gps.getLatitude());
             myLoc.setLongitude(gps.getLongitude());
 
+            //find all of the geocaches within a specific distance
             for (Geocache g: gC) {
                 Location geocache = new Location("cache");
                 geocache.setLatitude(g.getLatitude());
@@ -47,21 +56,26 @@ public class NearMe extends AppCompatActivity {
                 }
             }
 
+            //sort the caches
             Collections.sort(nearMe, new NearMeComp());
 
         }else{
+            //show the alert menu if the gps location cannout be determined
             gps.showSettingsAlert();
         }
 
+        //create an item list and add the cache information to list
         itemsList = new ArrayList<>();
         aboutCacheIntent = new Intent(this,AboutGeocache.class);
         for(int k=0; k<nearMe.size(); k++){
             itemsList.add(k, new RowItem(nearMe.get(k).getCacheName(), Double.toString(nearMe.get(k).getDistanceFromMe())+" miles"));
         }
+        //create a new list adapter to display the information
         ListAdapter currentAdapter = new ListAdapter(this, itemsList);
         connectActivities = (ListView) findViewById(R.id.nearMeList);
         connectActivities.setAdapter(currentAdapter);
 
+        //create listeners for each item in the list
         connectActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
@@ -75,6 +89,7 @@ public class NearMe extends AppCompatActivity {
                 b.putDouble("Longitude", gC.getLongitude());
                 b.putInt("Points", gC.getPoints());
                 b.putByteArray("Image", gC.getImage());
+                //start the about cache activity if a cache is clicked
                 aboutCacheIntent.putExtras(b);
                 startActivity(aboutCacheIntent);
             }
@@ -104,6 +119,9 @@ public class NearMe extends AppCompatActivity {
     }
 }
 
+/**
+ * Comparator for use with geocache distances
+ */
 class NearMeComp implements Comparator<Geocache> {
 
     @Override

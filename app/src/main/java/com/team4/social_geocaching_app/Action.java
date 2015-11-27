@@ -2,8 +2,13 @@ package com.team4.social_geocaching_app;
 
 /**
  * Created by Nick on 11/5/2015.
+ * Class which represents an action performed by a user on a cache
  */
 public class Action {
+    /*
+    * An action is represented by a performing user, an action type, the cache acted on,
+    * the date performed, the points generated, a comment on the action, and an image involved
+    */
     private String username;
     private String action;
     private int cacheNum;
@@ -11,6 +16,8 @@ public class Action {
     private int points;
     private String comment;
     private byte[] image;
+
+    //create getters and setters for all of the variables
 
     public void setUsername(String username){
         this.username = username;

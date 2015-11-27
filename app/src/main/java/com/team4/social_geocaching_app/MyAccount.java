@@ -30,8 +30,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class which creates and handles functionality of the account page
+ */
 public class MyAccount extends AppCompatActivity implements View.OnClickListener{
 
+    //variables used throughout the activity
     ImageView face;
     TextView points, geocachesFound, geocachesCreated, userName;
     private DatabaseHelper dbHelp;
@@ -42,11 +46,11 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
     Intent aboutCacheIntent;
     Intent viewCacheIntent;
     List<Action> actionsList;
-    List<Account> accountsList;
     byte[] inputByteStream;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //set the view and find the text views
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
         face = (ImageView) findViewById(R.id.userImage);
@@ -57,12 +61,7 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
         aboutCacheIntent = new Intent(this,AboutGeocache.class);
         viewCacheIntent = new Intent(this,GeocacheVisit.class);
 
-
-        //TODO: pull total points from db, total number geocaches found
-        //points.setText("5800");
-        //geocachesFound.setText("14");
-        //TODO: check if user has image uploaded
-
+        //get the user's account name and set a listener for the picture
         Bundle b = this.getIntent().getExtras();
         String username = getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken");
         if(this.getIntent().getStringExtra("accountName") != null){
@@ -75,34 +74,30 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
         }else{
             face.setOnClickListener(this);
         }
+        //set the username on the page
         userName.setText(username);
 
-
-
+        //create a database helper
         this.dbHelp = new DatabaseHelper(this);
 
+        //get the user's account image
         inputByteStream = dbHelp.getAccountImage(username);
         face.setImageBitmap(BitmapFactory.decodeByteArray(inputByteStream, 0, inputByteStream.length));
 
-//        Drawable drawable = getResources().getDrawable(R.drawable.defaultface);
-//        Bitmap bp = ((BitmapDrawable) drawable).getBitmap();
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
-//        byte[] imageByteStream = outputStream.toByteArray();
-//        if(Arrays.equals(inputByteStream, imageByteStream)) {
-//            Toast.makeText(getApplicationContext(), "Upload a profile photo!", Toast.LENGTH_LONG).show();
-//        }
-
+        //get all of the user's actions
         List<Action> results = dbHelp.selectActions(username, 0);
         int point = 0, found = 0, created=0;
         for (Action a : results) {
             if(a.getAction().equals("found")){
+                //count all of the caches found and the points accumulated
                 point += a.getPoints();
                 found += 1;
             }else {
+                //count all of the caches created
                 created += 1;
             }
         }
+        //set the text for the caches found and created
         points.setText(Integer.toString(point));
         geocachesFound.setText(Integer.toString(found));
         geocachesCreated.setText(Integer.toString(created));
@@ -112,6 +107,7 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
         String date, action;
         Geocache currentCache;
 
+        //create a list of actions to use with the list adapter
         int cacheNum, points;
         for(int k = 0; k<actionsList.size(); k++){
             date = actionsList.get(k).getDate();
@@ -127,20 +123,24 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
 
 
         }
+
+        //create a list adapter with the created list of actions
         ListAdapter currentAdapter = new ListAdapter(this, itemsList);
         connectActivities = (ListView) findViewById(R.id.activityList);
         connectActivities.setAdapter(currentAdapter);
         TextView activityTitle = (TextView) findViewById(R.id.activityTitle);
         activityTitle.setText("Recent activities");
+
+        //set listeners for each item in the list
         connectActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Bundle b = new Bundle();
                 List<Geocache> gC = dbHelp.selectGeocaches(actionsList.get(position).getCacheNum());
                 if (actionsList.get(position).getAction().equals("created") || actionsList.get(position).getAction().equals("created")) {
+                    //start the about cache intent when a created activity is clicked
                     b.putString("Title", gC.get(0).getCacheName());
                     b.putInt("CacheNum", gC.get(0).getCacheNum());
-                    //TODO: make TimesFound actually do times found??
                     b.putInt("TimesFound", gC.get(0).getPoints());
                     b.putString("Description", gC.get(0).getDescription());
                     b.putDouble("Latitude", gC.get(0).getLatitude());
@@ -150,6 +150,7 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
                     aboutCacheIntent.putExtras(b);
                     startActivity(aboutCacheIntent);
                 } else {
+                    //start the view cache when a found activity is clicked
                     b.putInt("CacheNum", gC.get(0).getCacheNum());
                     b.putString("Username", actionsList.get(position).getUsername());
                     viewCacheIntent.putExtras(b);
@@ -188,6 +189,7 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.userImage:
+                //create dialog option when the user image is clicked
                 final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MyAccount.this);
@@ -197,16 +199,19 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
                     public void onClick(DialogInterface dialog, int item) {
                         if (options[item].equals("Take Photo"))
                         {
+                            //if the user clicks the take photo option then start the camera and wait for the result
                             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                             startActivityForResult(cameraIntent, CAMERA_REQUEST);
                         }
                         else if (options[item].equals("Choose from Gallery"))
                         {
+                            //if the user clicks the gallery option then start the gallery and wait for the result
                             Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(intent, GALLERY_REQUEST);
 
                         }
                         else if (options[item].equals("Cancel")) {
+                            //if cancel is pressed then close the dialog
                             dialog.dismiss();
                         }
                     }
@@ -220,15 +225,18 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
+                //on result from the camera then then get the bitmap
                 Bitmap bp = (Bitmap) data.getExtras().get("data");
-                bp = resizeImage(bp, face.getWidth(), face.getHeight());
+                //bp = resizeImage(bp, face.getWidth(), face.getHeight());
+                //set the account image to the new picture
                 face.setImageBitmap(bp);
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
                 inputByteStream = outputStream.toByteArray();
+                //modify the account image in the database
                 dbHelp.modifyAccountImage((String) userName.getText(), inputByteStream);
             } else if (requestCode == 2) {
-
+                //on result from the gallery  get the image path
                 Uri selectedImage = data.getData();
                 String[] filePath = { MediaStore.Images.Media.DATA };
                 Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
@@ -236,18 +244,21 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 String picturePath = c.getString(columnIndex);
                 c.close();
+                //set account image to the picture
                 Bitmap bp = (BitmapFactory.decodeFile(picturePath));
                 bp = resizeImage(bp, face.getWidth(), face.getHeight());
                 face.setImageBitmap(bp);
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
                 inputByteStream = outputStream.toByteArray();
+                //modify the account image in the database
                 dbHelp.modifyAccountImage((String) userName.getText(), inputByteStream);
 
             }
         }
     }
 
+    //resizes the image for use in the image button
     public Bitmap resizeImage(Bitmap bp, float targetWidth, float targetHeight){
         float width = bp.getWidth();
         float height = bp.getHeight();

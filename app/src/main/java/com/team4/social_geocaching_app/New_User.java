@@ -1,6 +1,5 @@
 package com.team4.social_geocaching_app;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -16,12 +15,17 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
+/**
+ * Class which creates and implements functionality of the New User page
+ */
 public class New_User extends AppCompatActivity implements OnClickListener {
+    //variables used throughout the activity
     private Button btnNewUser;
     private DatabaseHelper dbHelp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //create the view and set the listener for the submit button
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new__user);
         btnNewUser = (Button)findViewById(R.id.submit);
@@ -53,8 +57,10 @@ public class New_User extends AppCompatActivity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.submit:
+                //attempt to create the account
                 boolean success = this.CreateAccount();
                 if(success){
+                    //if it is successfully then display a toast and finish the activity
                     Toast.makeText(getApplicationContext(), "Username and password are good!", Toast.LENGTH_LONG).show();
                     finish();
                 }
@@ -63,26 +69,30 @@ public class New_User extends AppCompatActivity implements OnClickListener {
     }
 
     private boolean CreateAccount() {
+        //get the values for the text boxes
         EditText userNameBox = (EditText)findViewById(R.id.username);
         EditText passwordBox = (EditText)findViewById(R.id.password);
         String username = userNameBox.getText().toString();
         String password = passwordBox.getText().toString();
 
+        //create a bitmap to put in the database as the image
         Drawable drawable = getResources().getDrawable(R.drawable.defaultface);
         Bitmap bp = ((BitmapDrawable) drawable).getBitmap();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
         byte[] imageByteStream = outputStream.toByteArray();
 
-
+        //create the database helper
         this.dbHelp = new DatabaseHelper(this);
 
+        //check username and password characteristics
         if ((!username.equals(""))
                 && (!password.equals(""))&&password.length() > 5 && password.matches("[A-Za-z0-9]+")&&password.matches(".*[0-9].*")&&!password.equals(password.toLowerCase())&&!password.equals(password.toUpperCase())&&!this.dbHelp.usernameTaken(username)) {
             this.dbHelp.insertAccount(username, password, imageByteStream);
             return true;
         }
         else if(this.dbHelp.usernameTaken(username)){
+            //display a toast if the username is taken
             Toast.makeText(getApplicationContext(), "Username taken!", Toast.LENGTH_LONG).show();
         }
         else if(password.length() < 6){
