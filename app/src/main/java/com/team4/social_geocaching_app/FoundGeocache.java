@@ -112,10 +112,17 @@ public class FoundGeocache extends AppCompatActivity implements View.OnClickList
                 //if the user clicks the check in button then insert  new action into the database
                 String comment = comments.getText().toString();
                 String username = getApplicationContext().getSharedPreferences("Preferences", 0).getString("userName", "Broken");
-                dbHelp.insertAction(username, "found", cacheNum, comment, imageByteStream);
-                Toast.makeText(getApplicationContext(), "Cache " + geocache.getCacheName() + " Found!", Toast.LENGTH_LONG).show();
+                if(imageByteStream != null){
+                    dbHelp.insertAction(username, "found", cacheNum, comment, imageByteStream);
+                    Toast.makeText(getApplicationContext(), "Cache " + geocache.getCacheName() + " Found!", Toast.LENGTH_LONG).show();
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Take a photo!", Toast.LENGTH_LONG).show();
+                }
+
+
                 //finish the activity
-                finish();
+
                 break;
             case R.id.geocacheFoundImage:
                 //if the user clicks the image button create options to choose
