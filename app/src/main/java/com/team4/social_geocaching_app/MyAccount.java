@@ -46,6 +46,7 @@ public class MyAccount extends AppCompatActivity implements View.OnClickListener
     Intent aboutCacheIntent;
     Intent viewCacheIntent;
     List<Action> actionsList;
+    List<Account> accountsList;
     byte[] inputByteStream;
 
     @Override

@@ -75,12 +75,7 @@ public class New_User extends AppCompatActivity implements OnClickListener {
         String username = userNameBox.getText().toString();
         String password = passwordBox.getText().toString();
 
-        //create a bitmap to put in the database as the image
-        Drawable drawable = getResources().getDrawable(R.drawable.defaultface);
-        Bitmap bp = ((BitmapDrawable) drawable).getBitmap();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
-        byte[] imageByteStream = outputStream.toByteArray();
+
 
         //create the database helper
         this.dbHelp = new DatabaseHelper(this);
@@ -88,6 +83,12 @@ public class New_User extends AppCompatActivity implements OnClickListener {
         //check username and password characteristics
         if ((!username.equals(""))
                 && (!password.equals(""))&&password.length() > 5 && password.matches("[A-Za-z0-9]+")&&password.matches(".*[0-9].*")&&!password.equals(password.toLowerCase())&&!password.equals(password.toUpperCase())&&!this.dbHelp.usernameTaken(username)) {
+            //create a bitmap to put in the database as the image
+            Drawable drawable = getResources().getDrawable(R.drawable.smalldefaultface);
+            Bitmap bp = ((BitmapDrawable) drawable).getBitmap();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+            byte[] imageByteStream = outputStream.toByteArray();
             this.dbHelp.insertAccount(username, password, imageByteStream);
             return true;
         }
