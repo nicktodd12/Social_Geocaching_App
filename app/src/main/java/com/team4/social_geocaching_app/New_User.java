@@ -84,7 +84,7 @@ public class New_User extends AppCompatActivity implements OnClickListener {
         if ((!username.equals(""))
                 && (!password.equals(""))&&password.length() > 5 && password.matches("[A-Za-z0-9]+")&&password.matches(".*[0-9].*")&&!password.equals(password.toLowerCase())&&!password.equals(password.toUpperCase())&&!this.dbHelp.usernameTaken(username)) {
             //create a bitmap to put in the database as the image
-            Drawable drawable = getResources().getDrawable(R.drawable.smalldefaultface);
+            Drawable drawable = getResources().getDrawable(R.drawable.defaultface);
             Bitmap bp = ((BitmapDrawable) drawable).getBitmap();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             bp.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
